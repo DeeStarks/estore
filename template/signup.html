@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="% url 'store:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item active">Register</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Login Start -->
+<form method="POST">
+{% csrf_token %}
+    <div class="login">
+        <div class="container-fluid">
+            <div class="justify-content-center d-flex">
+                <div class="col-lg-6 col-md-12">    
+                    <div class="register-form">
+                        <div class="row">
+                            <div class="col-md-6 mt-3">
+                                <label>First Name</label>
+                                <input required class="form-control mb-0" type="text" placeholder="First Name" name="first_name">
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label>Last Name</label>
+                                <input required class="form-control mb-0" type="text" placeholder="Last Name" name="last_name">
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label>E-mail</label>
+                                <input required class="form-control mb-0" type="text" placeholder="E-mail" name="email">
+                                <div class="text-danger mt-1" style="font-size: 12px; font-weight: 600; text-align: center;">{{ error.email }}</div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label>Username</label>
+                                <input required class="form-control mb-0" type="text" placeholder="Choose a username" name="username">
+                                <div class="text-danger mt-1" style="font-size: 12px; font-weight: 600; text-align: center;">{{ error.username }}</div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label>Password</label>
+                                <input required class="form-control mb-0" type="password" placeholder="Password" name="password1">
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label>Retype Password</label>
+                                <input required class="form-control mb-0" type="password" placeholder="Password" name="password2">
+                            </div>
+                            <div class="text-danger mt-1" style="font-size: 12px; font-weight: 600; text-align: center; width: 100%;">{{ error.password }}</div>
+                            <div class="col-md-12 justify-content-center d-flex mt-4">
+                                <button class="btn w-100" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Login End -->
+{% endblock %}

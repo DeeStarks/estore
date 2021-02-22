@@ -9,7 +9,7 @@
         <meta content="eCommerce HTML Template Free Download" name="description">
 
         <!-- Favicon -->
-        <link href="{% static 'img/favicon.ico' %}" rel="icon">
+        <link href="https://image.flaticon.com/icons/png/512/25/25174.png" rel="icon">
 
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Source+Code+Pro:700,900&display=swap" rel="stylesheet">
@@ -54,8 +54,7 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
                             <a href="{% url 'store:index' %}" class="nav-item nav-link active">Home</a>
-                            <a href="product-list.html" class="nav-item nav-link">Products</a>
-                            <a href="product-detail.html" class="nav-item nav-link">Product Detail</a>
+                            <a href="{% url 'store:product_list' %}" class="nav-item nav-link">Products</a>
                             <a href="cart.html" class="nav-item nav-link">Cart</a>
                             <a href="checkout.html" class="nav-item nav-link">Checkout</a>
                             <a href="my-account.html" class="nav-item nav-link">My Account</a>
@@ -67,10 +66,22 @@
                                 </div>
                             </div>
                         </div>
+                        {% if request.user.is_authenticated %}
                         <div class="navbar-nav ml-auto">
-                            <a href="" class="nav-item nav-link">Login</a>
-                            <a href="" class="nav-item nav-link">Register</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ request.user }}</a>
+                                <div class="dropdown-menu">
+                                    <a href="" class="dropdown-item">Profile</a>
+                                    <a href="{% url 'account:signout' %}" class="dropdown-item">Logout</a>
+                                </div>
+                            </div>
                         </div>
+                        {% else %}
+                        <div class="navbar-nav ml-auto">
+                            <a href="{% url 'account:signin' %}" class="nav-item nav-link">Login</a>
+                            <a href="{% url 'account:signup' %}" class="nav-item nav-link">Register</a>
+                        </div>
+                        {% endif %}
                     </div>
                 </nav>
             </div>
@@ -98,11 +109,11 @@
                         <div class="user">
                             <a href="wishlist.html" class="btn wishlist">
                                 <i class="fa fa-heart"></i>
-                                <span>(0)</span>
+                                <span id="wish_count">(0)</span>
                             </a>
                             <a href="cart.html" class="btn cart">
                                 <i class="fa fa-shopping-cart"></i>
-                                <span>(0)</span>
+                                <span id="cart_count">(0)</span>
                             </a>
                         </div>
                     </div>
@@ -116,7 +127,7 @@
         {% endblock %}
         
         <!-- Review Start -->
-        <div class="review">
+        <!-- <div class="review">
             <div class="container-fluid">
                 <div class="row align-items-center review-slider normal-slider">
                     <div class="col-md-6">
@@ -184,7 +195,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Review End -->        
         
         <!-- Footer Start -->
@@ -195,9 +206,9 @@
                         <div class="footer-widget">
                             <h2>Get in Touch</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>123 E Store, Los Angeles, USA</p>
-                                <p><i class="fa fa-envelope"></i>email@example.com</p>
-                                <p><i class="fa fa-phone"></i>+123-456-7890</p>
+                                <p><i class="fa fa-map-marker"></i>Ayobo-Ipaja, Lagos, Nigeria.</p>
+                                <p><i class="fa fa-envelope"></i>danielonoja246@gmail.com</p>
+                                <p><i class="fa fa-phone"></i>+234-903-648-1865</p>
                             </div>
                         </div>
                     </div>
@@ -232,9 +243,14 @@
                         <div class="footer-widget">
                             <h2>Purchase Info</h2>
                             <ul>
-                                <li><a href="#">Pyament Policy</a></li>
+                                <li><a href="#">Payment Policy</a></li>
                                 <li><a href="#">Shipping Policy</a></li>
                                 <li><a href="#">Return Policy</a></li>
+                            </ul>
+                            <hr>
+                            <h2>Make Money</h2>
+                            <ul>
+                                <li><a href="">Sell on EStore</a></li>
                             </ul>
                         </div>
                     </div>

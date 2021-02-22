@@ -13,19 +13,36 @@ class Product(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    price = models.IntegerField(null=True, blank=True)
+    original_price = models.IntegerField(null=True, blank=True)
     discount = models.IntegerField(null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)
     category = models.CharField(max_length=100, choices=CATEGORIES, null=True)
-    review_percentage = models.IntegerField(null=True, blank=True)
+    rating = models.IntegerField(null=True, blank=True)
     sold = models.IntegerField(default=0)
     featured = models.BooleanField(default=False)
+    shipped = models.BooleanField(default=False)
     date_published = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.product_name
 
+SIZES = (
+    ("EXTRASMALL", "XS"),
+    ("SMALL", "S"),
+    ("MEDIUM", "M"),
+    ("LARGE", "L"),
+    ("EXTRALARGE", "XL"),
+    ("TWO_EXTRALARGE", "XXL"),
+)
+class ClothSize(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    size = models.CharField(max_length=100, choices=SIZES, null=True)
+    
+    def __str__(self):
+        return self.product.product_name
+
 class ProductImage(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(blank=True, null=True, upload_to='products/')
     default = models.BooleanField(default=False)
     
@@ -33,7 +50,7 @@ class ProductImage(models.Model):
         return self.product.product_name
 
 class ProductSpecification(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     title = models.CharField(max_length=150, blank=True, null=True)
     detail = models.CharField(max_length=150, blank=True, null=True)
 
@@ -42,7 +59,7 @@ class ProductSpecification(models.Model):
 
 class ProductReview(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     reviewer_name = models.CharField(max_length=150, blank=True, null=True)
     reviewer_email = models.EmailField(max_length=150, blank=True, null=True)
     review_text = models.CharField(max_length=1000, blank=True, null=True)
@@ -61,8 +78,9 @@ SUBSCRIPTION = (
 
 class ProductAdvert(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     banner = models.ImageField(blank=True, null=True, upload_to='advert_banners/')
+    advert_title = models.CharField(max_length=50, blank=True, null=True)
     advert_description = models.CharField(max_length=200, blank=True, null=True)
     sub_duration = models.CharField(max_length=100, choices=SUBSCRIPTION, default='DAILY')
 
