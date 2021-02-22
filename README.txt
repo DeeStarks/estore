@@ -1,4 +1,5 @@
 # EStore Online Marketplace
+
 This is an Ecommerce web app using Python (Django).
 
 Feel free to make changes. And if you love the project, do ADD a STAR ⭐️.
@@ -6,24 +7,28 @@ Feel free to make changes. And if you love the project, do ADD a STAR ⭐️.
 ## Features of this Project
 
 ### A. Seller
+
 1. Buy and Sell Products
 2. View and Review Products
 3. Checkout from shopping cart
 4. Like and add products to wishlist
 
 ### B. Customer:
+
 1. Buy Products
 2. View and Review Products
 3. Checkout from shopping cart
 4. Like and add products to wishlist
 
 ### C. Guest:
+
 1. View Products
 
 
 ## Installation/Running
 
 ### Pre-Requisites:
+
 1. Install Git Version Control
 [ https://git-scm.com/ ]
 
@@ -36,6 +41,7 @@ Feel free to make changes. And if you love the project, do ADD a STAR ⭐️.
 *Homebrew can also be used as an alternative to pip*
 
 ### Installation
+
 **1. Create a Virtual Environment and Activate**
 
 Install Virtual Environment
