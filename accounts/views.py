@@ -58,6 +58,8 @@ def signin(request):
             user = User.objects.get(username=username)
             if user.check_password(password):
                 login(request, user)
+                if request.GET.get('next'):
+                    return redirect(request.GET.get('next'))
                 return redirect('store:index')
             else:
                 error = "Username or password incorrect"

@@ -118,14 +118,17 @@
                                     {% endfor %}
                                 </a>
                                 <div class="product-action">
-                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
-                                    <a href="#"><i class="fa fa-heart"></i></a>
-                                    <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}"><i class="fa fa-search"></i></a>
+                                    <a style="cursor: pointer;" id="addToWish"><i class="{% if product.id in wishlist_product_ids %}fas fa-heart{% else %}far fa-heart{% endif %}"><span style="display: none;">{{ product.id }}</span></i></a>
+                                    <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}"><i class="fas fa-search"></i></a>
                                 </div>
                             </div>
                             <div class="product-price">
                                 <h3><span>₦ </span>{{ product.price }}</h3>
-                                <a class="btn" href=""><i class="fa fa-shopping-cart"></i></a>
+                                {% if product.id in cart_product_ids %}
+                                <a href="{% url 'transaction:cart' %}" class="btn font-weight-bold">Go to cart</a>
+                                {% else %}
+                                <a href="{% url 'transaction:add_to_cart' product.id %}" class="btn" style="cursor: pointer;"><i class="fas fa-shopping-cart"></i></a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -196,9 +199,76 @@
     </div>
 </div>
 <!-- Brand End -->
-
 <script>
-    
+    // Handling CSRF Token for django to accept POST request from Javascript
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // Adding to wishlist
+    function addWish(data){
+        fetch('http://127.0.0.1:8000/api/wishlist', {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({
+                "user": "{{ request.user.id }}",
+                "product": data.id,
+            })
+        })
+    }
+
+    // Getting product to add to/delete from user's wishlist
+    let addToWish = document.querySelectorAll('#addToWish')
+    let heartWish = document.querySelectorAll('#addToWish i')
+    for(let i = 0; i <= addToWish.length; i++){
+        addToWish[i].onclick = () => {
+            if(heartWish[i].className == "far fa-heart"){
+                let productId = document.querySelectorAll('#addToWish i span')[i].innerHTML
+
+                fetch('http://127.0.0.1:8000/api/products')
+                .then((res) => res.json())
+                .then((data) => {
+                    for (let j = 0; j <= data.length; j++){
+                        if (data[j].id == parseInt(productId)){
+                            addWish(data[j])
+                        }
+                    }
+                })
+
+                document.getElementById("wish_count").innerHTML = parseInt(document.getElementById("wish_count").innerHTML)+1;
+                heartWish[i].className = "fas fa-heart"
+            }else if(heartWish[i].className == "fas fa-heart"){
+                let productId = document.querySelectorAll('#addToWish i span')[i].innerHTML
+
+                fetch(`http://127.0.0.1:8000/api/wishlist/product/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-type": "application/json",
+                        "X-CSRFToken": csrftoken
+                    }
+                })
+
+                document.getElementById("wish_count").innerHTML = parseInt(document.getElementById("wish_count").innerHTML)-1;
+                heartWish[i].className = "far fa-heart"
+            }
+        }
+    }
 </script>
 
 {% endblock %}

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 import random
+from django.contrib.auth.models import User
 from .models import Product, ProductImage, ProductSpecification, ProductReview, ProductAdvert
+from transactions.models import Wishlist, ShoppingCart
 from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
@@ -27,10 +29,11 @@ def index(request):
                 adverts.append(product)
 
     context = {
+        'products': [product for product in all_products],
         'featured': featured_products,
         'adverts': adverts,
         'recent': recent_products,
-        'product_images': ProductImage
+        'product_images': ProductImage,
     }
     return render(request, 'index.html', context)
 
@@ -66,18 +69,18 @@ def product_detail(request, product_id, title):
         if rate:
             percentage_rate = int((int(rate)/5)*100)
             
-        total_rate = int(((percentage_rate+product.rating)/200)*100)
-        product.rating = total_rate
-        product.save()
+        # total_rate = int(((percentage_rate+product.rating)/200)*100)
+        # product.rating = total_rate
+        # product.save()
 
-        ProductReview.objects.create(
-            product=product,
-            seller=product.seller,
-            reviewer_name=name,
-            reviewer_email=email,
-            review_rating=percentage_rate,
-            review_text=text
-        )
+        # ProductReview.objects.create(
+        #     product=product,
+        #     seller=product.seller,
+        #     reviewer_name=name,
+        #     reviewer_email=email,
+        #     review_rating=percentage_rate,
+        #     review_text=text
+        # )
 
     context = {
         "product": product,

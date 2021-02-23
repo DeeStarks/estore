@@ -55,7 +55,7 @@
                         <div class="navbar-nav mr-auto">
                             <a href="{% url 'store:index' %}" class="nav-item nav-link active">Home</a>
                             <a href="{% url 'store:product_list' %}" class="nav-item nav-link">Products</a>
-                            <a href="cart.html" class="nav-item nav-link">Cart</a>
+                            <a href="{% url 'transaction:cart' %}" class="nav-item nav-link">Cart</a>
                             <a href="checkout.html" class="nav-item nav-link">Checkout</a>
                             <a href="my-account.html" class="nav-item nav-link">My Account</a>
                             <div class="nav-item dropdown">
@@ -71,7 +71,7 @@
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ request.user }}</a>
                                 <div class="dropdown-menu">
-                                    <a href="" class="dropdown-item">Profile</a>
+                                    <!-- <a href="" class="dropdown-item">Profile</a> -->
                                     <a href="{% url 'account:signout' %}" class="dropdown-item">Logout</a>
                                 </div>
                             </div>
@@ -109,11 +109,11 @@
                         <div class="user">
                             <a href="wishlist.html" class="btn wishlist">
                                 <i class="fa fa-heart"></i>
-                                <span id="wish_count">(0)</span>
+                                (<span id="wish_count">{{ wishlist|length }}</span>)
                             </a>
-                            <a href="cart.html" class="btn cart">
+                            <a href="{% url 'transaction:cart' %}" class="btn cart">
                                 <i class="fa fa-shopping-cart"></i>
-                                <span id="cart_count">(0)</span>
+                                (<span id="cart_count">{{ cart|length }}</span>)
                             </a>
                         </div>
                     </div>
