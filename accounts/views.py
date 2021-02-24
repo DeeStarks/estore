@@ -4,6 +4,10 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.hashers import make_password
 from estore.decorators import authenticated_user, user_group
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from transactions.models import Order
+from .models import Profile
 
 # Create your views here.
 @authenticated_user
@@ -81,3 +85,35 @@ def signin(request):
 def signout(request):
     logout(request)
     return redirect('account:signin')
+    
+@login_required(login_url='account:signin')
+def account(request, username):
+    user = User.objects.get(username=request.user)
+    orders = Order.objects.filter(user=user)
+    user_details = None
+    try:
+        profile = Profile.objects.get(user=user)
+        user_details = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "mobile": profile.mobile,
+            "permanent_address": profile.permanent_address,
+            "shipping_address": profile.shipping_address
+        }
+    except ObjectDoesNotExist:
+        user_details = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email
+        }
+
+    if request.method == 'POST' and 'update_account' in request.POST:
+        pass
+    elif request.method == 'POST' and 'change_password' in request.POST:
+        pass
+    context = {
+        'orders': orders,
+        'profile': user_details
+    }
+    return render(request, 'my-account.html', context)

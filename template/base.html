@@ -55,10 +55,12 @@
                         <div class="navbar-nav mr-auto">
                             <a href="{% url 'store:index' %}" class="nav-item nav-link active">Home</a>
                             <a href="{% url 'store:product_list' %}" class="nav-item nav-link">Products</a>
+                        {% if request.user.is_authenticated %}
                             <a href="{% url 'transaction:cart' %}" class="nav-item nav-link">Cart</a>
                             <a href="{% url 'transaction:wishlist' %}" class="nav-item nav-link">Wishlist</a>
                             <a href="checkout.html" class="nav-item nav-link">Checkout</a>
-                            <a href="my-account.html" class="nav-item nav-link">My Account</a>
+                            <a href="{% url 'account:my_account' username=request.user|lower %}" class="nav-item nav-link">Account</a>
+                        {% endif %}
                         </div>
                         {% if request.user.is_authenticated %}
                         <div class="navbar-nav ml-auto">
@@ -99,6 +101,7 @@
                             <button><i class="fa fa-search"></i></button>
                         </div>
                     </div>
+                    {% if request.user.is_authenticated %}
                     <div class="col-md-3">
                         <div class="user">
                             <a href="{% url 'transaction:wishlist' %}" class="btn wishlist">
@@ -111,6 +114,7 @@
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -119,79 +123,6 @@
         {% block content %}
 
         {% endblock %}
-        
-        <!-- Review Start -->
-        <!-- <div class="review">
-            <div class="container-fluid">
-                <div class="row align-items-center review-slider normal-slider">
-                    <div class="col-md-6">
-                        <div class="review-slider-item">
-                            <div class="review-img">
-                                <img src="{% static 'img/review-1.jpg' %}" alt="Image">
-                            </div>
-                            <div class="review-text">
-                                <h2>Customer Name</h2>
-                                <h3>Profession</h3>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae nunc eget leo finibus luctus et vitae lorem
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="review-slider-item">
-                            <div class="review-img">
-                                <img src="{% static 'img/review-2.jpg' %}" alt="Image">
-                            </div>
-                            <div class="review-text">
-                                <h2>Customer Name</h2>
-                                <h3>Profession</h3>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae nunc eget leo finibus luctus et vitae lorem
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="review-slider-item">
-                            <div class="review-img">
-                                <img src="{% static 'img/review-3.jpg' %}" alt="Image">
-                            </div>
-                            <div class="review-text">
-                                <h2>Customer Name</h2>
-                                <h3>Profession</h3>
-                                <div class="ratting">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae nunc eget leo finibus luctus et vitae lorem
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- Review End -->        
-        
         <!-- Footer Start -->
         <div class="footer">
             <div class="container-fluid">
@@ -200,7 +131,7 @@
                         <div class="footer-widget">
                             <h2>Get in Touch</h2>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>Ayobo-Ipaja, Lagos, Nigeria.</p>
+                                <p><i class="fas fa-map-marker-alt"></i>Ayobo-Ipaja, Lagos, Nigeria.</p>
                                 <p><i class="fa fa-envelope"></i>danielonoja246@gmail.com</p>
                                 <p><i class="fa fa-phone"></i>+234-903-648-1865</p>
                             </div>
