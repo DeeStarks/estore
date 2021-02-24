@@ -31,8 +31,14 @@ def signup(request):
                         username=username,
                         password=password1
                     )
+                    group = Group.objects.update_or_create(
+                        name='customer',
+                        defaults={
+                            'name': 'customer'
+                        }
+                    )
                     user = User.objects.get(username=username)
-                    user.groups.add(Group.objects.get(name='customer'))
+                    user.groups.add(group)
                     update_session_auth_hash(request, user)
                     return redirect('account:signin')
                 else:

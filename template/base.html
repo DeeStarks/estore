@@ -56,15 +56,9 @@
                             <a href="{% url 'store:index' %}" class="nav-item nav-link active">Home</a>
                             <a href="{% url 'store:product_list' %}" class="nav-item nav-link">Products</a>
                             <a href="{% url 'transaction:cart' %}" class="nav-item nav-link">Cart</a>
+                            <a href="{% url 'transaction:wishlist' %}" class="nav-item nav-link">Wishlist</a>
                             <a href="checkout.html" class="nav-item nav-link">Checkout</a>
                             <a href="my-account.html" class="nav-item nav-link">My Account</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">More Pages</a>
-                                <div class="dropdown-menu">
-                                    <a href="wishlist.html" class="dropdown-item">Wishlist</a>
-                                    <a href="contact.html" class="dropdown-item">Contact Us</a>
-                                </div>
-                            </div>
                         </div>
                         {% if request.user.is_authenticated %}
                         <div class="navbar-nav ml-auto">
@@ -107,7 +101,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="user">
-                            <a href="wishlist.html" class="btn wishlist">
+                            <a href="{% url 'transaction:wishlist' %}" class="btn wishlist">
                                 <i class="fa fa-heart"></i>
                                 (<span id="wish_count">{{ wishlist|length }}</span>)
                             </a>

@@ -16,72 +16,73 @@
 <!-- Cart Start -->
 <div class="cart-page">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="cart-page-inner">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            {% if cart %}
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th>Remove</th>
-                                </tr>
-                            </thead>
-                            <tbody class="align-middle">
-                                {% for product in cart %}
-                                <tr>
-                                    <td>
-                                        <div class="img">
-                                            {% for image in product.product.productimage_set.all %}
-                                            {% if image.default %}
-                                            <a href="{% url 'store:product_detail' product_id=product.product.id title=product.product.product_name.split|join:'_' %}"><img src="{{ image.image.url }}" alt="Image"></a>
-                                            {% endif %}
-                                            {% endfor %}
-                                            <a href="{% url 'store:product_detail' product_id=product.product.id title=product.product.product_name.split|join:'_' %}" class="text-left">{{ product.product.product_name }}</a>
-                                        </div>
-                                    </td>
-                                    <td>₦<span id="actualPrice">{{ product.product.price }}</span></td>
-                                    <td>
-                                        <div class="qty">
-                                            <button class="btn-minus" onclick="subPrice('{{ product.id }}', '{{ product.product.price }}')"><i class="fa fa-minus"></i></button>
-                                            <input type="text" value="1" id="product{{ product.id }}">
-                                            <button class="btn-plus" onclick="addPrice('{{ product.id }}', '{{ product.product.price }}')"><i class="fa fa-plus"></i></button>
-                                        </div>
-                                    </td>
-                                    <td>₦<span id="price{{ product.id }}" class="prices">{{ product.product.price }}</span></td>
-                                    <td><a href="{% url 'transaction:remove_from_cart' pk=product.id %}"><button><i class="fa fa-trash"></i></button></a></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                            {% else %}
-                            <div style="text-align: center; color: gray; width: 100%; font-size: 25px; font-weight: bold; font-style: italic;">You have no product in your cart</div>
-                            {% endif %}
-                        </table>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="cart-page-inner">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                {% if cart %}
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="align-middle">
+                                    {% for product in cart %}
+                                    <input type="text" value="{{ product.product.id }}" name="product" hidden>
+                                    <tr>
+                                        <td>
+                                            <div class="img">
+                                                {% for image in product.product.productimage_set.all %}
+                                                {% if image.default %}
+                                                <a href="{% url 'store:product_detail' product_id=product.product.id title=product.product.product_name.split|join:'_' %}"><img src="{{ image.image.url }}" alt="Image"></a>
+                                                {% endif %}
+                                                {% endfor %}
+                                                <a href="{% url 'store:product_detail' product_id=product.product.id title=product.product.product_name.split|join:'_' %}" class="text-left">{{ product.product.product_name }}</a>
+                                            </div>
+                                        </td>
+                                        <td>₦<span id="actualPrice">{{ product.product.price }}</span></td>
+                                        <td>
+                                            <div class="qty">
+                                                <button class="btn-minus" onclick="subPrice('{{ product.id }}', '{{ product.product.price }}')" type="button"><i class="fa fa-minus"></i></button>
+                                                <input type="text" value="1" id="product{{ product.id }}" name="quantity">
+                                                <button class="btn-plus" onclick="addPrice('{{ product.id }}', '{{ product.product.price }}')" type="button"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </td>
+                                        <td>₦<span id="price{{ product.id }}" class="prices">{{ product.product.price }}</span></td>
+                                        <td><a href="{% url 'transaction:remove_from_cart' pk=product.id %}"><button type="button"><i class="fa fa-trash"></i></button></a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                {% else %}
+                                <div style="text-align: center; color: gray; width: 100%; font-size: 25px; font-weight: bold; font-style: italic;">You have no product in your cart</div>
+                                {% endif %}
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="cart-page-inner">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="coupon">
-                                <input type="text" placeholder="Coupon Code">
-                                <button>Apply Code</button>
+                <div class="col-lg-4">
+                    <div class="cart-page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="coupon">
+                                    <input type="text" placeholder="Coupon Code">
+                                    <button>Apply Code</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <form method="POST">
-                                {% csrf_token %}
+                            <div class="col-md-12">
                                 <div class="cart-summary">
                                     <div class="cart-content">
                                         <h1>Cart Summary</h1>
-                                        <p>Sub Total<span>$<a id="subTotal">{{ cart_sub_total }}</a></span></p>
-                                        <p>Shipping Cost<span>$<a id="shippingCost">{{ shipping_cost }}</a></span></p>
-                                        <h2>Grand Total<span>$<a id="grandTotal">{{ cart_grand_total }}</a></span></h2>
+                                        <p>Sub Total<span>₦<a id="subTotal">{{ cart_sub_total }}</a></span></p>
+                                        <p>Shipping Cost<span>₦<a id="shippingCost">{{ shipping_cost }}</a></span></p>
+                                        <h2>Grand Total<span>₦<a id="grandTotal">{{ cart_grand_total }}</a></span></h2>
                                         <input type="text" value="{{ cart_grand_total }}" name="total" id="totalValue" style="display: none;">
                                     </div>
                                     <div class="cart-btn">
@@ -89,12 +90,12 @@
                                         <button type="submit">Checkout</button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <!-- Cart End -->

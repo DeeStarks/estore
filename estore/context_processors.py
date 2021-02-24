@@ -11,24 +11,31 @@ def global_variable(request):
         'four': range(61, 81),
         'five': range(81, 101),
     }
-    wishlist = None
-    wishlist_product_ids = None
     cart = None
     cart_product_ids = None
+    wishlist = []
+    wishlist_product_ids = []
     shipping_cost = 1000
     cart_sub_total = 0
     cart_grand_total = 0
 
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user)
-        wishlist = Wishlist.objects.filter(user=user)
         cart = ShoppingCart.objects.filter(user=user)
 
-        wishlist_product_ids = [wishlist.product.id for wishlist in Wishlist.objects.filter(user=user)]
         cart_product_ids = [cart.product.id for cart in ShoppingCart.objects.filter(user=user)]
         for product in cart:
             cart_sub_total += product.product.price
         cart_grand_total = cart_sub_total+shipping_cost
+
+        for product in Wishlist.objects.filter(user=user):
+            if product.product.id not in cart_product_ids and product.product.id not in wishlist_product_ids:
+                wishlist_product_ids.append(product.product.id)
+                
+        for product in Wishlist.objects.filter(user=user):
+            print(product)
+            if product.product.id not in cart_product_ids and product.product.id not in [product.product.id for product in wishlist]:
+                wishlist.append(product)
 
     return { 
         'review_ranges': review_ranges,
