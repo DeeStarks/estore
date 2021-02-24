@@ -6,25 +6,18 @@ from store.models import Product
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-class CartShop:
-    def __init__(self):
-        self.products = None
-        self.quantities = None
-        self.price = None
-
-    @login_required(login_url='account:signin')
-    @classmethod
-    def cart(request, cls):
-        if request.method == 'POST':
-            self.products = request.POST.getlist('product')
-            self.quantities = request.POST.getlist('quantity')
-            self.price = request.POST.get('total')
-            print(f'''
-Products = {[Product.objects.get(id=product) for product in self.products]}
-Quantities = {self.quantities}
-Price = {self.price}        
-            ''')
-        return render(request, 'cart.html')
+@login_required(login_url='account:signin')
+def cart(request):
+    if request.method == 'POST':
+        products = request.POST.getlist('product')
+        quantities = request.POST.getlist('quantity')
+        price = request.POST.get('total')
+        print(f'''
+Products = {[Product.objects.get(id=product) for product in products]}
+Quantities = {quantities}
+Price = {price}        
+        ''')
+    return render(request, 'cart.html')
         
 @login_required(login_url='account:signin')
 def add_to_cart(request, pk):
