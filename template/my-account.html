@@ -20,13 +20,17 @@
             <div class="col-md-3">
                 <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
                     <a class="nav-link active" id="orders-nav" data-toggle="pill" href="#orders-tab" role="tab"><i class="fa fa-shopping-bag" style="width: 30px; text-align: center;"></i>Orders</a>
-                    <a class="nav-link" id="payment-nav" data-toggle="pill" href="#payment-tab" role="tab"><i class="fa fa-credit-card" style="width: 30px; text-align: center;"></i>Payment Method</a>
                     <a class="nav-link" id="address-nav" data-toggle="pill" href="#address-tab" role="tab"><i class="fas fa-map-marker-alt" style="width: 30px; text-align: center;"></i>Address</a>
                     <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user" style="width: 30px; text-align: center;"></i>Update Account</a>
                     <a class="nav-link" href="{% url 'account:signout' %}"><i class="fa fa-sign-out-alt" style="width: 30px; text-align: center;"></i>Logout</a>
                 </div>
             </div>
             <div class="col-md-9">
+                {% if message.success %}
+                <div class="alert alert-success" role="alert">{{ message.success }}</div>
+                {% elif message.error %}
+                <div class="alert alert-danger" role="alert">{{ message.error }}</div>
+                {% endif %}
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
                         <div class="table-responsive">
@@ -60,24 +64,18 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="payment-tab" role="tabpanel" aria-labelledby="payment-nav">
-                        <h4>Payment Method</h4>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In condimentum quam ac mi viverra dictum. In efficitur ipsum diam, at dignissim lorem tempor in. Vivamus tempor hendrerit finibus. Nulla tristique viverra nisl, sit amet bibendum ante suscipit non. Praesent in faucibus tellus, sed gravida lacus. Vivamus eu diam eros. Aliquam et sapien eget arcu rhoncus scelerisque.
-                        </p> 
-                    </div>
                     <div class="tab-pane fade" id="address-tab" role="tabpanel" aria-labelledby="address-nav">
                         <h4 style="font-weight: bold;">ADDRESS</h4>
                         <div class="row">
                             <div class="col-md-6">
                                 <h5 style="font-weight: 800; text-transform:uppercase; padding: 20px 0 5px 0; border-bottom: 1px solid #0000004d;">Permanent Address</h5>
-                                <p>123 Payment Street, Los Angeles, CA</p>
-                                <p>Mobile: 012-345-6789</p>
+                                <p>{% if profile.permanent_address %}{{ profile.permanent_address }}{% else %}---{% endif %}</p>
+                                <p>Mobile: {% if profile.mobile %}{{ profile.mobile }}{% else %}---{% endif %}</p>
                             </div>
                             <div class="col-md-6">
                                 <h5 style="font-weight: 800; text-transform:uppercase; padding: 20px 0 5px 0; border-bottom: 1px solid #0000004d;">Shipping Address</h5>
-                                <p>123 Shipping Street, Los Angeles, CA</p>
-                                <p>Mobile: 012-345-6789</p>
+                                <p>{% if profile.shipping_address %}{{ profile.shipping_address }}{% else %}---{% endif %}</p>
+                                <p>Mobile: {% if profile.mobile %}{{ profile.mobile }}{% else %}---{% endif %}</p>
                             </div>
                         </div>
                     </div>
@@ -110,20 +108,21 @@
                                 </div>
                             </div>
                         </form>
+                        <div style="border: .5px solid #00000033; width: 100%; margin: 20px 0;"></div>
                         <h4>Password change</h4>
                         <form method="POST">
                             {% csrf_token %}
                             <div class="row">
-                                <div class="col-md-12">
-                                    <input class="form-control" type="password" placeholder="Current Password" name="current_password">
+                                <div class="col-md-12 mt-3">
+                                    <input class="form-control mb-0" type="password" placeholder="Current Password" name="current_password">
                                 </div>
-                                <div class="col-md-6">
-                                    <input class="form-control" type="text" placeholder="New Password" name="new_password">
+                                <div class="col-md-6 mt-3">
+                                    <input class="form-control mb-0" type="password" placeholder="New Password" name="new_password">
                                 </div>
-                                <div class="col-md-6">
-                                    <input class="form-control" type="text" placeholder="Confirm Password" name="confirm_password">
+                                <div class="col-md-6 mt-3">
+                                    <input class="form-control mb-0" type="password" placeholder="Confirm Password" name="confirm_password">
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12 mt-3">
                                     <button class="btn" type="submit" name="change_password">Change Password</button>
                                 </div>
                             </div>

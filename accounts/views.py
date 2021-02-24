@@ -6,6 +6,7 @@ from estore.decorators import authenticated_user, user_group
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from transactions.models import Order
 from .models import Profile
 
@@ -91,6 +92,10 @@ def account(request, username):
     user = User.objects.get(username=request.user)
     orders = Order.objects.filter(user=user)
     user_details = None
+    message = {
+        "success": '',
+        "error": ''
+    }
     try:
         profile = Profile.objects.get(user=user)
         user_details = {
@@ -109,11 +114,51 @@ def account(request, username):
         }
 
     if request.method == 'POST' and 'update_account' in request.POST:
-        pass
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        mobile = request.POST.get("mobile")
+        email = request.POST.get("email")
+        permanent_address = request.POST.get("permanent_address")
+        shipping_address = request.POST.get("shipping_address")
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+        if mobile.startswith('+'):
+            try:
+                Profile.objects.create(
+                    user=user,
+                    mobile=mobile,
+                    permanent_address=permanent_address,
+                    shipping_address=shipping_address
+                )
+            except IntegrityError:
+                profile = Profile.objects.get(user=user)
+                profile.mobile = mobile
+                profile.permanent_address = permanent_address
+                profile.shipping_address = shipping_address
+                profile.save()
+            message['success'] = 'Account Updated Successfully!'
+        else:
+            message['error'] = 'Please add your country code starting with "+" to your phone number'
+
     elif request.method == 'POST' and 'change_password' in request.POST:
-        pass
+        current_password = request.POST.get("current_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+        if user.check_password(current_password):
+            if new_password == confirm_password:
+                user.password = make_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)
+                message["success"] = "Password Changed Successfully!"
+            else:
+                message["error"] = "Your new password did not match. Please re-type password!"
+        else:
+            message['error'] = "The current password you entered is incorrect. Please re-type password!"
+
     context = {
         'orders': orders,
-        'profile': user_details
+        'profile': user_details,
+        'message': message
     }
     return render(request, 'my-account.html', context)
