@@ -38,10 +38,10 @@ def index(request):
     return render(request, 'index.html', context)
 
 def products(request):
-    context = {
-        'products': Product.objects.all().order_by('date_published')
-    }
-    return render(request, 'product-list.html', context)
+    
+    return render(request, 'product-list.html', {
+        'products': Product.objects.all().order_by('-id')
+    })
 
 def product_detail(request, product_id, title):
     product = Product.objects.get(id=product_id)

@@ -63,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-                    
+                    {% if products %}
                     {% for product in products %}
                     <div class="col-md-4">
                         <div class="product-item">
@@ -133,6 +133,9 @@
                         </div>
                     </div>
                     {% endfor %}
+                    {% else %}
+                    <h2 class="text-center font-italic w-100 my-5">No products found</h2>
+                    {% endif %}
                 </div>
                 
                 <!-- Pagination Start -->
