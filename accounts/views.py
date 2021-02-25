@@ -36,12 +36,15 @@ def signup(request):
                         username=username,
                         password=password1
                     )
-                    group = Group.objects.update_or_create(
-                        name='customer',
-                        defaults={
-                            'name': 'customer'
-                        }
-                    )
+
+                    group = None
+                    if 'customer' not in [group.name for group in Group.objects.all()]:
+                        group = Group.objects.create(
+                            name='customer'
+                        )
+                    else:
+                        group = Group.objects.get(name='customer')
+                        
                     user = User.objects.get(username=username)
                     user.groups.add(group)
                     update_session_auth_hash(request, user)
