@@ -1,6 +1,9 @@
 from transactions.models import Wishlist, ShoppingCart
 from django.contrib.auth.models import User
 from store.models import ProductImage
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 def global_variable(request):
     review_ranges = {
@@ -33,7 +36,6 @@ def global_variable(request):
                 wishlist_product_ids.append(product.product.id)
                 
         for product in Wishlist.objects.filter(user=user):
-            print(product)
             if product.product.id not in cart_product_ids and product.product.id not in [product.product.id for product in wishlist]:
                 wishlist.append(product)
 

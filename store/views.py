@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .models import Product, ProductImage, ProductSpecification, ProductReview, ProductAdvert
 from transactions.models import Wishlist, ShoppingCart
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def index(request):
@@ -38,9 +39,31 @@ def index(request):
     return render(request, 'index.html', context)
 
 def products(request):
-    
+    search_length = 0
+    search_value = None
+    paginator = Paginator(Product.objects.all().order_by('-id'), 10)
+    products = paginator.page(1)
+
+    if 'search' in request.GET:
+        search_value = request.GET.get('search')
+        query = Product.objects.filter(product_name__icontains=search_value).order_by('-id')
+        paginator = Paginator(query, 10)
+        products = paginator.page(1)
+        search_length = query.count()
+
+    if 'page' in request.GET:
+        page = request.GET.get('page')
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
+
     return render(request, 'product-list.html', {
-        'products': Product.objects.all().order_by('-id')
+        'products': products,
+        'search_length': search_length,
+        'search_value': search_value
     })
 
 def product_detail(request, product_id, title):
