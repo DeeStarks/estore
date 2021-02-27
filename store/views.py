@@ -60,10 +60,23 @@ def products(request):
         except EmptyPage:
             products = paginator.page(paginator.num_pages)
 
+    # Price ranges 
+    highest_price = 0
+    for product in Product.objects.all():
+        if product.price > highest_price:
+            highest_price = product.price
+    price_ranges = [[0, 1000]]
+    previous_range = 1000
+    for i in range(int(highest_price+1)):
+        if i % 1000 == 0 and i not in [0, 1000]:
+            price_ranges.append([previous_range, i])
+            previous_range += 1000
+
     return render(request, 'product-list.html', {
         'products': products,
         'search_length': search_length,
-        'search_value': search_value
+        'search_value': search_value,
+        'price_ranges': price_ranges
     })
 
 def product_detail(request, product_id, title):
@@ -92,18 +105,18 @@ def product_detail(request, product_id, title):
         if rate:
             percentage_rate = int((int(rate)/5)*100)
             
-        # total_rate = int(((percentage_rate+product.rating)/200)*100)
-        # product.rating = total_rate
-        # product.save()
+        total_rate = int(((percentage_rate+product.rating)/200)*100)
+        product.rating = total_rate
+        product.save()
 
-        # ProductReview.objects.create(
-        #     product=product,
-        #     seller=product.seller,
-        #     reviewer_name=name,
-        #     reviewer_email=email,
-        #     review_rating=percentage_rate,
-        #     review_text=text
-        # )
+        ProductReview.objects.create(
+            product=product,
+            seller=product.seller,
+            reviewer_name=name,
+            reviewer_email=email,
+            review_rating=percentage_rate,
+            review_text=text
+        )
 
     context = {
         "product": product,

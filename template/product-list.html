@@ -50,9 +50,9 @@
                                         <div class="dropdown">
                                             <div class="dropdown-toggle" data-toggle="dropdown">Product short by</div>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a href="#" class="dropdown-item">Newest</a>
-                                                <a href="#" class="dropdown-item">Popular</a>
-                                                <a href="#" class="dropdown-item">Most sale</a>
+                                                <a href="{% url 'store:product_list' %}?filter=products&by=newest" class="dropdown-item">Newest</a>
+                                                <a href="{% url 'store:product_list' %}?filter=products&by=popular" class="dropdown-item">Popular</a>
+                                                <a href="{% url 'store:product_list' %}?filter=products&by=sale" class="dropdown-item">Most sale</a>
                                             </div>
                                         </div>
                                     </div>
@@ -62,16 +62,9 @@
                                         <div class="dropdown">
                                             <div class="dropdown-toggle" data-toggle="dropdown">Product price range</div>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a href="#" class="dropdown-item">$0 to $50</a>
-                                                <a href="#" class="dropdown-item">$51 to $100</a>
-                                                <a href="#" class="dropdown-item">$101 to $150</a>
-                                                <a href="#" class="dropdown-item">$151 to $200</a>
-                                                <a href="#" class="dropdown-item">$201 to $250</a>
-                                                <a href="#" class="dropdown-item">$251 to $300</a>
-                                                <a href="#" class="dropdown-item">$301 to $350</a>
-                                                <a href="#" class="dropdown-item">$351 to $400</a>
-                                                <a href="#" class="dropdown-item">$401 to $450</a>
-                                                <a href="#" class="dropdown-item">$451 to $500</a>
+                                                {% for range in price_ranges %}
+                                                <a href="{% url 'store:product_list' %}?filter=products&range={{ range.0 }}-{{ range.1 }}" class="dropdown-item">₦{{ range.0 }} to ₦{{ range.1 }}</a>
+                                                {% endfor %}
                                             </div>
                                         </div>
                                     </div>
@@ -193,19 +186,19 @@
                     <nav class="navbar bg-light">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-female"></i>Fashion & Beauty</a>
+                                <a class="nav-link" href="{% url 'store:product_list' %}?filter=products&category=fashion_and_beauty"><i class="fa fa-female"></i>Fashion & Beauty</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-child"></i>Kids & Babies Clothes</a>
+                                <a class="nav-link" href="{% url 'store:product_list' %}?filter=products&category=kids_and_babies_clothes"><i class="fa fa-child"></i>Kids & Babies Clothes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-tshirt"></i>Men & Women Clothes</a>
+                                <a class="nav-link" href="{% url 'store:product_list' %}?filter=products&category=men_and_women_clothes"><i class="fa fa-tshirt"></i>Men & Women Clothes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-mobile-alt"></i>Gadgets & Accessories</a>
+                                <a class="nav-link" href="{% url 'store:product_list' %}?filter=products&category=gadgets_and_accessories"><i class="fa fa-mobile-alt"></i>Gadgets & Accessories</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fa fa-microchip"></i>Electronics & Accessories</a>
+                                <a class="nav-link" href="{% url 'store:product_list' %}?filter=products&category=electronics_and_accessories"><i class="fa fa-microchip"></i>Electronics & Accessories</a>
                             </li>
                         </ul>
                     </nav>
