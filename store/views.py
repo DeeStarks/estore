@@ -44,6 +44,7 @@ def products(request):
     paginator = Paginator(Product.objects.all().order_by('-id'), 10)
     products = paginator.page(1)
 
+    # Searching for products through the database in user's input
     if 'search' in request.GET:
         search_value = request.GET.get('search')
         query = Product.objects.filter(product_name__icontains=search_value).order_by('-id')
@@ -51,6 +52,7 @@ def products(request):
         products = paginator.page(1)
         search_length = query.count()
 
+    # Paginating
     if 'page' in request.GET:
         page = request.GET.get('page')
         try:
@@ -59,6 +61,34 @@ def products(request):
             products = paginator.page(1)
         except EmptyPage:
             products = paginator.page(paginator.num_pages)
+
+    # Sorting products
+    if 'filter' in request.GET and 'by' in request.GET:
+        sort_by = request.GET.get('by')
+        search_value = sort_by
+        query = Product.objects.all()
+        if sort_by == 'newest':
+            query = Product.objects.all().order_by('-date_published')
+        elif sort_by == 'popular':
+            query = Product.objects.all().order_by('-views')
+        elif sort_by == 'sale':
+            query = Product.objects.all().order_by('-sold')
+        
+        paginator = Paginator(query, 10)
+        products = paginator.page(1)
+        search_length = len(query)
+
+    # Sorting products by price range
+    if 'filter' in request.GET and 'range' in request.GET:
+        price_range = request.GET.get('range').split('-')
+        search_value = f"₦{price_range[0]} - ₦{price_range[1]}"
+        query = []
+        for item in Product.objects.all():
+            if item.price in range(int(price_range[0])+1, int(price_range[1])+1):
+                query.append(item)
+        paginator = Paginator(query, 10)
+        products = paginator.page(1)
+        search_length = len(query)
 
     # Price ranges 
     highest_price = 0
@@ -81,6 +111,8 @@ def products(request):
 
 def product_detail(request, product_id, title):
     product = Product.objects.get(id=product_id)
+    product.views += 1
+    product.save()
     related = []
     other_products = []
     for product__obj in Product.objects.all():

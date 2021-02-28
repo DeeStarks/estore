@@ -16,7 +16,7 @@
 <!-- Cart Start -->
 <div class="cart-page">
     <div class="container-fluid">
-        <form method="POST">
+        <form method="POST" id="paymentForm">
             {% csrf_token %}
             <div class="row">
                 <div class="col-lg-8">
@@ -83,11 +83,11 @@
                                         <p>Sub Total<span>₦<a id="subTotal">{{ cart_sub_total }}</a></span></p>
                                         <p>Shipping Cost<span>₦<a id="shippingCost">{{ shipping_cost }}</a></span></p>
                                         <h2>Grand Total<span>₦<a id="grandTotal">{{ cart_grand_total }}</a></span></h2>
-                                        <input type="text" value="{{ cart_grand_total }}" name="total" id="totalValue" style="display: none;">
+                                        <input type="number" value="{{ cart_grand_total }}" name="total" id="totalValue" style="display: none;">
                                     </div>
                                     <div class="cart-btn">
                                         <button style="visibility: hidden;">Update Cart</button>
-                                        <button type="submit">Checkout</button>
+                                        <button type="submit" onclick="payWithPaystack()">Checkout</button>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +99,9 @@
     </div>
 </div>
 <!-- Cart End -->
+<script src="https://js.paystack.co/v1/inline.js"></script> 
 <script>
+    // Adding and subtracting quantity of products
     function addPrice(id, price){
         let productPrice = document.getElementById(`price${id}`)
         document.getElementById(`price${id}`).innerHTML = parseInt(productPrice.innerHTML) + parseInt(price);
@@ -126,6 +128,34 @@
             document.getElementById("grandTotal").innerHTML = grandTotal
             document.getElementById("totalValue").value = grandTotal
         }
+    }
+
+    // Paystack implementation
+    const paymentForm = document.getElementById('paymentForm');
+    paymentForm.addEventListener("submit", payWithPaystack, false);
+    function payWithPaystack(e) {
+        e.preventDefault();
+        let price = document.getElementById("totalValue").value * 100
+        let handler = PaystackPop.setup({
+            key: '{{ paystack_pubkey }}',
+            email: "{{ request.user.email }}",
+            amount: price.toString(),
+            ref: 'refno_'+Math.floor((Math.random() * 1000000000) + 1),
+            onClose: function(){
+                alert('Window closed.');
+            },
+            callback: function(response){
+                let refNo = response.reference
+                console.log('Payment complete! Reference: ' + refNo);
+
+                fetch(`http://127.0.0.1:8000/verify/${refNo}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data)
+                })
+            }
+        });
+        handler.openIframe();
     }
 </script>
 {% endblock %}

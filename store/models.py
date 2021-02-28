@@ -19,6 +19,7 @@ class Product(models.Model):
     category = models.CharField(max_length=100, choices=CATEGORIES, null=True)
     rating = models.IntegerField(null=True, blank=True)
     sold = models.IntegerField(default=0)
+    views = models.IntegerField(default=0)
     featured = models.BooleanField(default=False)
     shipped = models.BooleanField(default=False)
     date_published = models.DateTimeField(auto_now_add=True)
