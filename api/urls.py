@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import products, product, wishlist, wish_product, users, user, cart, cart_product
+from .views import products, product, wishlist, wish_product, users, user, cart, cart_product, order
 
 app_name = 'api'
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('wishlist/product/<int:pk>', wish_product, name="wish_product"),
     path('cart', cart, name="cart"),
     path('cart/product/<int:pk>', cart_product, name="cart_product"),
+    path('order', order, name="order"),
 ]

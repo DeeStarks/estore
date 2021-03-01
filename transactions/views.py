@@ -104,7 +104,7 @@ def checkout(request, order_uid):
             "account_number": "0264152126" 
         }
     }
-    charge_request = requests.post('https://api.paystack.co/charge', 
+    charge_response = requests.post('https://api.paystack.co/charge', 
         headers={
             "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
             "Content-Type": "application/json"
@@ -112,7 +112,7 @@ def checkout(request, order_uid):
         data=json.dumps(data)
     )
 
-    print(charge_request.text)
+    print(charge_response.text)
 
     # Get customer's transaction
     # Still needs to be refactored
@@ -158,7 +158,7 @@ def wishlist(request):
 @login_required(login_url='account:signin')
 def remove_from_wishlist(request, pk):
     user = User.objects.get(username=request.user)
-    wishlist.objects.filter(user=user).get(id=pk).delete()
+    Wishlist.objects.filter(user=user).get(id=pk).delete()
     return redirect('transaction:wishlist')
 
 @login_required(login_url='account:signin')

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from store.models import Product
-from transactions.models import Wishlist, ShoppingCart
+from transactions.models import Wishlist, ShoppingCart, Order
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -22,4 +22,9 @@ class WishlistSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShoppingCart
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
         fields = '__all__'

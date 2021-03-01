@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from transactions.models import Order
 from .models import Profile
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 @authenticated_user
@@ -98,7 +99,19 @@ def account(request, username):
             if user_obj.username.lower() == username:
                 user = user_obj
                 
-        orders = Order.objects.filter(user=user)
+        paginator = Paginator(Order.objects.filter(user=user).order_by('-id'), 10)
+        orders = paginator.page(1)
+        
+        # Paginating
+        if 'page' in request.GET:
+            page = request.GET.get('page')
+            try:
+                orders = paginator.page(page)
+            except PageNotAnInteger:
+                orders = paginator.page(1)
+            except EmptyPage:
+                orders = paginator.page(paginator.num_pages)
+
         user_details = None
         message = {
             "success": '',

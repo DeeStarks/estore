@@ -25,6 +25,7 @@ STATUS = (
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order_uid = models.CharField(max_length=200, null=True)
+    authorization_code = models.CharField(max_length=200, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(null=True)
     price = models.IntegerField(null=True)

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from .serializers import UsersSerializer, ProductsSerializer, WishlistSerializer, CartSerializer
+from .serializers import UsersSerializer, ProductsSerializer, WishlistSerializer, CartSerializer, OrderSerializer
 from store.models import Product
-from transactions.models import Wishlist, ShoppingCart
+from transactions.models import Wishlist, ShoppingCart, Order
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
@@ -84,4 +84,20 @@ def cart_product(request, pk):
     if request.method == 'DELETE':
         cart_product.delete()
 
+    return Response(serializer.data)
+    
+@login_required(login_url='account:signin')
+@api_view(['GET', 'POST'])
+def order(request, format=None):
+    customer = User.objects.get(username=request.user)
+    orders = Order.objects.filter(user=customer)
+    serializer = OrderSerializer(orders, many=True)
+    if request.method == 'POST':
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            for product in ShoppingCart.objects.filter(user=customer):
+                product.delete()
+        else:
+            print(serializer.errors)
     return Response(serializer.data)

@@ -5,7 +5,7 @@ app_name = 'transaction'
 
 urlpatterns = [
     path('cart', cart, name="cart"),
-    path('verify/<int:ref_id>', verify, name="verify"),
+    path('verify/<str:ref_id>', verify, name="verify"),
     path('cart/add/<int:pk>', add_to_cart, name="add_to_cart"),
     path('cart/remove/<int:pk>', remove_from_cart, name="remove_from_cart"),
     path('wishlist', wishlist, name='wishlist'),

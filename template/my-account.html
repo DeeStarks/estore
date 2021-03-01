@@ -1,6 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}   
+{% block content %}
+<style>
+    .disabled.next a{
+        color: #00000065 !important;
+        border-color: #00000065 !important;
+        border-radius: 0 4px 4px 0;
+        background-color: transparent !important;
+    }
+    .disabled.prev a{
+        color: #00000065 !important;
+        border-color: #00000065 !important;
+        border-radius: 4px 0 0 4px;
+        background-color: transparent !important;
+    }
+    .pagination li a{
+        border-color: #000 !important;
+        transition: 200ms;
+    }
+    .pagination li a:hover{
+        background-color: black;
+        color: #FF6F61;
+    }
+    .pagination .active a{
+        background-color: black !important;
+        color: #FF6F61 !important;
+    }
+</style>
 <!-- Breadcrumb Start -->
 <div class="breadcrumb-wrap">
     <div class="container-fluid">
@@ -38,12 +64,12 @@
                                 {% if orders %}
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>No</th>
-                                        <th>Product</th>
-                                        <th>Date</th>
-                                        <th>Price</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
+                                        <th width="5%">No</th>
+                                        <th width="35%">Product</th>
+                                        <th width="15%">Date</th>
+                                        <th width="15%">Price</th>
+                                        <th width="15%">Status</th>
+                                        <th width="15%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,9 +77,9 @@
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ order.product.product_name }}</td>
-                                        <td>{{ order.order_date }}</td>
+                                        <td>{{ order.order_date.date }}</td>
                                         <td>₦{{ order.price }}</td>
-                                        <td>{{ order.status }}</td>
+                                        <td>{{ order.get_status_display }}</td>
                                         <td><a href="{% url 'store:product_detail' order.product.id order.product.product_name.split|join:'_' %}"><button class="btn">View</button></a></td>
                                     </tr>
                                     {% endfor %}
@@ -63,6 +89,33 @@
                                 {% endif %}
                             </table>
                         </div>
+                        {% if orders %}
+                        <!-- Pagination Start -->
+                        <div class="col-md-12 my-5">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    {% if orders.has_previous %}
+                                    <li class="page-item"><a href="?page={{ orders.previous_page_number }}" class="page-link" tabindex="-1">Previous</a></li>
+                                    {% else %}
+                                    <li class="disabled prev"><a class="page-link" tabindex="-1">Previous</a></li>
+                                    {% endif %}
+                                    {% for i in orders.paginator.page_range %}
+                                    {% if orders.number == i %}
+                                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }</a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% if orders.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ orders.next_page_number }}">Next</a></li>
+                                    {% else %}
+                                    <li class="disabled next"><a class="page-link">Next</a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                        <!-- Pagination Ends -->
+                        {% endif %}
                     </div>
                     <div class="tab-pane fade" id="address-tab" role="tabpanel" aria-labelledby="address-nav">
                         <h4 style="font-weight: bold;">ADDRESS</h4>
