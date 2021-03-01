@@ -4,6 +4,7 @@ from django.urls import reverse
 from .models import ShoppingCart, Wishlist, Order, Checkout
 from django.contrib.auth.models import User, Group
 from store.models import Product, CATEGORIES
+from accounts.models import BusinessProfile
 from django.contrib.auth.decorators import login_required
 from estore.decorators import user_group
 import uuid
@@ -182,23 +183,26 @@ def sell(request):
         seller_alt_contact = request.POST.get("phno_2")
         account_name = request.POST.get("holdername")
         account_number = request.POST.get("accountno")
-        print(f"""
-{business_name}
-{business_mail}
-{category}
-{seller_first_name}
-{seller_last_name}
-{seller_contact}
-{seller_alt_contact}
-{account_name}
-{account_number}       
-        """)
-
+        
+        # Creating user's business/seller account
+        BusinessProfile.objects.create(
+            user=user,
+            business_name=business_name,
+            first_name=seller_first_name,
+            last_name=seller_last_name,
+            bank_name=account_name,
+            bank_number=account_number,
+            email=business_mail,
+            contact=seller_contact,
+            alternate_contact=seller_alt_contact,
+            category=category
+        )
         # Changing user's group from customer to seller
         user_group = User.groups.through.objects.get(user=user)
-        print(user_group)
-        # user_group.group = Group.objects.get(name='seller')
-        # user_group.save()
+        user_group.group = Group.objects.get(name='seller')
+        user_group.save()
+        return redirect("business:shop")
+
     context = {
         "categories": CATEGORIES
     }

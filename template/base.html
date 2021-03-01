@@ -69,7 +69,7 @@
                             <a href="{% url 'transaction:wishlist' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'wishlist' %}active{% endif %}">Wishlist</a>
                             {% if request.user.groups.all.0.name == 'customer' %}
                             <a href="{% url 'transaction:sell' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'sell' %}active{% endif %}">Sell</a>
-                            {% elif request.user.groups.all.0.name == 'seller' or request.user.is_superuser %}
+                            {% elif request.user.groups.all.0.name == 'seller' %}
                             <a href="{% url 'business:shop' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'shop' %}active{% endif %}">Your Shop</a>
                             <a href="{% url 'business:product_orders' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'product_orders' %}active{% endif %}">Pending Orders {% if pending_orders_count %}<span style="position: absolute; font-size: 8px; border-radius: 50px; padding: 2px 6px; color: white; background-color: red; top: 0;">{{ pending_orders_count }}</span>{% endif %}</a>
                             {% endif %}
