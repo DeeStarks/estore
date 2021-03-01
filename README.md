@@ -29,14 +29,11 @@ Feel free to make changes. And if you love the project, do ADD a STAR ⭐️.
 
 ### Pre-Requisites:
 
-1. Install Git Version Control
-[ https://git-scm.com/ ]
+1. Install <a href="https://git-scm.com/">Git Version Control</a>
 
-2. Install Python Latest Version
-[ https://www.python.org/downloads/ ]
+2. Install <a href="https://www.python.org/downloads/">Python Latest Version</a>
 
-3. Install Pip (Package Manager)
-[ https://pip.pypa.io/en/stable/installing/ ]
+3. Install Pip <a href="https://pip.pypa.io/en/stable/installing/">Package Manager</a>
 
 *Homebrew can also be used as an alternative to pip*
 
