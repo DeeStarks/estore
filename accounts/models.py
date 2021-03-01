@@ -6,7 +6,7 @@ from store.models import CATEGORIES
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    mobile = PhoneNumberField(null=True, blank=True, unique=True)
+    mobile = models.CharField(max_length=50, null=True, blank=True)
     permanent_address = models.CharField(max_length=400, null=True)
     shipping_address = models.CharField(max_length=400, null=True)
 

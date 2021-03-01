@@ -90,6 +90,19 @@ def products(request):
         products = paginator.page(1)
         search_length = len(query)
 
+    # Sorting products by category
+    if 'filter' in request.GET and 'category' in request.GET:
+        category = request.GET.get('category').upper()
+        search_value = None
+        query = []
+        for item in Product.objects.all():
+            if item.category == category:
+                search_value = item.get_category_display()
+                query.append(item)
+        paginator = Paginator(query, 10)
+        products = paginator.page(1)
+        search_length = len(query)
+
     # Price ranges 
     highest_price = 0
     for product in Product.objects.all():

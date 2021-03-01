@@ -144,23 +144,20 @@ def account(request, username):
             user.first_name = first_name
             user.last_name = last_name
             user.save()
-            if mobile.startswith('+'):
-                try:
-                    Profile.objects.create(
-                        user=user,
-                        mobile=mobile,
-                        permanent_address=permanent_address,
-                        shipping_address=shipping_address
-                    )
-                except IntegrityError:
-                    profile = Profile.objects.get(user=user)
-                    profile.mobile = mobile
-                    profile.permanent_address = permanent_address
-                    profile.shipping_address = shipping_address
-                    profile.save()
-                message['success'] = 'Account Updated Successfully!'
-            else:
-                message['error'] = 'Please add your country code starting with "+" to your phone number'
+            try:
+                Profile.objects.create(
+                    user=user,
+                    mobile=mobile,
+                    permanent_address=permanent_address,
+                    shipping_address=shipping_address
+                )
+            except IntegrityError:
+                profile = Profile.objects.get(user=user)
+                profile.mobile = mobile
+                profile.permanent_address = permanent_address
+                profile.shipping_address = shipping_address
+                profile.save()
+            message['success'] = 'Account Updated Successfully! Click <a href="/me/'+ request.user.username.lower() +'">here<a> to reload and to see changes.'
 
         elif request.method == 'POST' and 'change_password' in request.POST:
             current_password = request.POST.get("current_password")
