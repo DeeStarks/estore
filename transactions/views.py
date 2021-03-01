@@ -3,13 +3,14 @@ from django.http import JsonResponse
 from django.urls import reverse
 from .models import ShoppingCart, Wishlist, Order, Checkout
 from django.contrib.auth.models import User
-from store.models import Product
+from store.models import Product, CATEGORIES
 from django.contrib.auth.decorators import login_required
 from estore.decorators import user_group
 import uuid
 from pypaystack import Transaction, Customer
 import requests, json
 from django.conf import settings
+from estore.decorators import business_owned
 
 # Create your views here.
 @login_required(login_url='account:signin')
@@ -167,6 +168,31 @@ def shop(request):
     return render(request, 'shop.html')
 
 @login_required(login_url='account:signin')
+@business_owned
 @user_group(allowed_roles=['customer'])
 def sell(request):
-    return render(request, 'sell.html')
+    if request.method == 'POST':
+        business_name = request.POST.get("business_name")
+        business_mail = request.POST.get("business_mail")
+        category = request.POST.get("business_category")
+        seller_first_name = request.POST.get("fname")
+        seller_last_name = request.POST.get("lname")
+        seller_contact = request.POST.get("phno")
+        seller_alt_contact = request.POST.get("phno_2")
+        account_name = request.POST.get("holdername")
+        account_number = request.POST.get("accountno")
+        print(f"""
+{business_name}
+{business_mail}
+{category}
+{seller_first_name}
+{seller_last_name}
+{seller_contact}
+{seller_alt_contact}
+{account_name}
+{account_number}       
+        """)
+    context = {
+        "categories": CATEGORIES
+    }
+    return render(request, 'sell.html', context)

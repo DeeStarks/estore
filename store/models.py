@@ -6,8 +6,8 @@ CATEGORIES = (
     ("FASHION_BEAUTY", "Fashion & Beauty"),
     ("KIDS_CLOTHES", "Kids & Babies Clothes"),
     ("MEN_WOMEN_CLOTHES", "Men & Women Clothes"),
-    ("GADGET_ACCESSORIES", "Gadgets & Accessories"),
-    ("GADGET_ACCESSORIES", "Electronics & Accessories")
+    ("GADGETS_ACCESSORIES", "Gadgets & Accessories"),
+    ("ELECTRONICS_ACCESSORIES", "Electronics & Accessories")
 )
 class Product(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)

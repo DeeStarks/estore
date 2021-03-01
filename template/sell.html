@@ -40,6 +40,7 @@
     }
 
     #msform input,
+    #msform select,
     #msform textarea {
         padding: 0px 8px 4px 8px;
         border: none;
@@ -51,11 +52,11 @@
         box-sizing: border-box;
         font-family: montserrat;
         color: #2C3E50;
-        font-size: 16px;
         letter-spacing: 1px
     }
 
     #msform input:focus,
+    #msform select:focus,
     #msform textarea:focus {
         -moz-box-shadow: none !important;
         -webkit-box-shadow: none !important;
@@ -151,7 +152,7 @@
 
     #progressbar #account:before {
         font-family: FontAwesome;
-        content: "\f023"
+        content: "\f0b1"
     }
 
     #progressbar #personal:before {
@@ -248,10 +249,11 @@
                 <p style="font-size: 18px; font-weight: 600; padding-top: 20px;">BECOME A SELLER</p>
                 <div class="row">
                     <div class="col-md-12 mx-0">
-                        <form id="msform">
+                        <form id="msform" method="POST">
+                            {% csrf_token %}
                             <!-- progressbar -->
                             <ul id="progressbar">
-                                <li class="active" id="account"><strong>Account</strong></li>
+                                <li class="active" id="account"><strong>Business</strong></li>
                                 <li id="personal"><strong>Personal</strong></li>
                                 <li id="payment"><strong>Payment</strong></li>
                                 <li id="confirm"><strong>Finish</strong></li>
@@ -260,20 +262,24 @@
                             <!-- fieldsets -->
                             <fieldset>
                                 <div class="form-card">
-                                    <h2 class="fs-title">Account Information</h2> 
-                                    <input type="email" name="email" placeholder="Email Id" /> 
-                                    <input type="text" name="uname" placeholder="UserName" /> 
-                                    <input type="password" name="pwd" placeholder="Password" /> 
-                                    <input type="password" name="cpwd" placeholder="Confirm Password" />
+                                    <h2 class="fs-title">Business Information</h2> 
+                                    <input type="email" name="business_mail" placeholder="Business Email" required/> 
+                                    <input type="text" name="business_name" placeholder="Business Name" required/> 
+                                    <select name="business_category" id="" required>
+                                        <option selected disabled>BUSINESS CATEGORY</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.0 }}">{{ category.1 }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div> <input type="button" name="next" class="next action-button" value="Next Step" />
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
                                     <h2 class="fs-title">Personal Information</h2> 
-                                    <input type="text" name="fname" placeholder="First Name" /> 
-                                    <input type="text" name="lname" placeholder="Last Name" /> 
-                                    <input type="text" name="phno" placeholder="Contact No." /> 
-                                    <input type="text" name="phno_2" placeholder="Alternate Contact No." />
+                                    <input type="text" name="fname" placeholder="First Name" required/> 
+                                    <input type="text" name="lname" placeholder="Last Name" required/> 
+                                    <input type="number" name="phno" placeholder="Contact No." required/> 
+                                    <input type="number" name="phno_2" placeholder="Alternate Contact No."/>
                                 </div> 
                                 <input type="button" name="previous" class="previous action-button-previous" value="Previous" /> 
                                 <input type="button" name="next" class="next action-button" value="Next Step" />
@@ -281,44 +287,17 @@
                             <fieldset>
                                 <div class="form-card">
                                     <h2 class="fs-title">Payment Information</h2>
-                                    <div class="radio-group d-flex justify-content-center">
-                                        <div class='radio' data-value="credit"><img src="https://i.imgur.com/XzOzVHZ.jpg" width="200px" height="100px"></div>
-                                        <br>
-                                    </div> <label class="pay">Card Holder Name*</label> <input type="text" name="holdername" placeholder="" />
+                                    <label class="pay">Bank Account Name*</label> 
+                                    <input type="text" name="holdername" placeholder="" />
                                     <div class="row">
-                                        <div class="col-9"> <label class="pay">Card Number*</label> <input type="text" name="cardno" placeholder="" /> </div>
-                                        <div class="col-3"> <label class="pay">CVC*</label> <input type="password" name="cvcpwd" placeholder="***" /> </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-3"> <label class="pay">Expiry Date*</label> </div>
-                                        <div class="col-9"> 
-                                            <div class="row">
-                                                <div class="col-md-6 col-sm-12">
-                                                    <select class="list-dt form-control" id="month" name="expmonth">
-                                                        <option selected>Month</option>
-                                                        <option>January</option>
-                                                        <option>February</option>
-                                                        <option>March</option>
-                                                        <option>April</option>
-                                                        <option>May</option>
-                                                        <option>June</option>
-                                                        <option>July</option>
-                                                        <option>August</option>
-                                                        <option>September</option>
-                                                        <option>October</option>
-                                                        <option>November</option>
-                                                        <option>December</option>
-                                                    </select> 
-                                                </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                    <select class="list-dt form-control" id="year" name="expyear">
-                                                        <option selected>Year</option>
-                                                    </select> 
-                                                </div>
-                                            </div>
+                                        <div class="col-12"> 
+                                            <label class="pay">Bank Account Number*</label> 
+                                            <input type="number" name="accountno" placeholder="" /> 
                                         </div>
                                     </div>
-                                </div> <input type="button" name="previous" class="previous action-button-previous" value="Previous" /> <input type="button" name="make_payment" class="next action-button" value="Confirm" />
+                                </div> 
+                                <input type="button" name="previous" class="previous action-button-previous" value="Previous" /> 
+                                <input type="submit" name="make_payment" class="next action-button" value="Confirm" />
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">

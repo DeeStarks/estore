@@ -9,7 +9,15 @@ def authenticated_user(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-# Switches user to his/her group when logged in - (Admin, Staff, Student)
+# Redirects business owners who are already registered
+def business_owned(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.groups.all()[0].name == 'seller':
+            return redirect('store:index')
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+# Switches user to his/her group when logged in - (Customer, Seller)
 def user_group(allowed_roles=[]):
     def decorator(view_func):
         def wrapper(request, *args, **kwargs):
