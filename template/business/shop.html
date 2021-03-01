@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    
+</style>
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item active">Your Shop</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<div class="container">
+    
+</div>
+{% endblock %}

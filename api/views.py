@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from .serializers import UsersSerializer, ProductsSerializer, WishlistSerializer, CartSerializer, OrderSerializer
+from .serializers import UsersSerializer, ProductsSerializer, WishlistSerializer, CartSerializer, OrderSerializer, PendingOrderSerializer
 from store.models import Product
 from transactions.models import Wishlist, ShoppingCart, Order
+from business.models import PendingOrder
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
@@ -98,6 +99,20 @@ def order(request, format=None):
             serializer.save()
             for product in ShoppingCart.objects.filter(user=customer):
                 product.delete()
+        else:
+            print(serializer.errors)
+    return Response(serializer.data)
+    
+@login_required(login_url='account:signin')
+@api_view(['GET', 'POST'])
+def pending_orders(request):
+    seller = User.objects.get(username=request.user)
+    orders = PendingOrder.objects.filter(seller=seller)
+    serializer = PendingOrderSerializer(orders, many=True)
+    if request.method == 'POST':
+        serializer = PendingOrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
         else:
             print(serializer.errors)
     return Response(serializer.data)

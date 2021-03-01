@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from store.models import Product
 from transactions.models import Wishlist, ShoppingCart, Order
+from business.models import PendingOrder
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -27,4 +28,9 @@ class CartSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
+        fields = '__all__'
+
+class PendingOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PendingOrder
         fields = '__all__'

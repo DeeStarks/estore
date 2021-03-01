@@ -191,6 +191,7 @@
                 .then((res) => res.json())
                 .then((data) => {
                     "{% for product in cart %}"
+                    // Sending order to customer's account
                     fetch('http://127.0.0.1:8000/api/order', {
                         method: 'POST',
                         headers: {
@@ -207,11 +208,29 @@
                             "status": "PENDING"
                         })
                     })
+                    
+                    // Sending order to seller's account
+                    fetch('http://127.0.0.1:8000/api/pending', {
+                        method: 'POST',
+                        headers: {
+                            "Content-type": "application/json",
+                            "X-CSRFToken": csrftoken
+                        },
+                        body: JSON.stringify({
+                            "seller": parseInt("{{ product.product.seller.id }}"),
+                            "customer": parseInt("{{ request.user.id }}"),
+                            "product": parseInt("{{ product.product.id }}"),
+                            "order_uid": data[3].reference,
+                            "quantity": parseInt(document.getElementById("product{{ product.id }}").value),
+                            "total_price": parseInt(document.getElementById("price{{ product.id }}").innerHTML)
+                        })
+                    })
                     "{% endfor %}"
                     document.getElementById("success").click();
                     document.getElementById("cartDepo").innerHTML = `
                         <div style="text-align: center; color: gray; width: 100%; font-size: 25px; font-weight: bold; font-style: italic;">You have no product in your cart</div>
                     `
+                    document.getElementById("cart_count").innerHTML = '0';
                 })
             }
         });

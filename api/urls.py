@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import products, product, wishlist, wish_product, users, user, cart, cart_product, order
+from .views import products, product, wishlist, wish_product, users, user, cart, cart_product, order, pending_orders
 
 app_name = 'api'
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path('cart', cart, name="cart"),
     path('cart/product/<int:pk>', cart_product, name="cart_product"),
     path('order', order, name="order"),
+    path('pending', pending_orders, name="pending_orders"),
 ]

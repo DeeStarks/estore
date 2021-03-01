@@ -66,10 +66,11 @@
                                     <tr>
                                         <th width="5%">No</th>
                                         <th width="35%">Product</th>
-                                        <th width="15%">Date</th>
-                                        <th width="15%">Price</th>
+                                        <th width="5%">Quantity</th>
+                                        <th width="12%">Price</th>
                                         <th width="15%">Status</th>
-                                        <th width="15%">Action</th>
+                                        <th width="15%">Date</th>
+                                        <th width="12%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,9 +78,10 @@
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ order.product.product_name }}</td>
-                                        <td>{{ order.order_date.date }}</td>
+                                        <td>{{ order.quantity }}</td>
                                         <td>₦{{ order.price }}</td>
                                         <td>{{ order.get_status_display }}</td>
+                                        <td>{{ order.order_date.date }}</td>
                                         <td><a href="{% url 'store:product_detail' order.product.id order.product.product_name.split|join:'_' %}"><button class="btn">View</button></a></td>
                                     </tr>
                                     {% endfor %}

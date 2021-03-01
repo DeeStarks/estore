@@ -1,6 +1,7 @@
 from transactions.models import Wishlist, ShoppingCart
 from django.contrib.auth.models import User
 from store.models import ProductImage
+from business.models import PendingOrder
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -21,6 +22,7 @@ def global_variable(request):
     shipping_cost = 1000
     cart_sub_total = 0
     cart_grand_total = 0
+    pending_orders = 0
 
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user)
@@ -39,6 +41,8 @@ def global_variable(request):
             if product.product.id not in cart_product_ids and product.product.id not in [product.product.id for product in wishlist]:
                 wishlist.append(product)
 
+        pending_orders = PendingOrder.objects.filter(seller=user).count()
+
     return { 
         'review_ranges': review_ranges,
         'wishlist': wishlist,
@@ -47,5 +51,6 @@ def global_variable(request):
         'cart_product_ids': cart_product_ids,
         'shipping_cost': shipping_cost,
         "cart_sub_total": cart_sub_total,
-        "cart_grand_total": cart_grand_total
+        "cart_grand_total": cart_grand_total,
+        "pending_orders_count": pending_orders
     }

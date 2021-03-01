@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
 from .models import ShoppingCart, Wishlist, Order, Checkout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from store.models import Product, CATEGORIES
 from django.contrib.auth.decorators import login_required
 from estore.decorators import user_group
@@ -171,6 +171,7 @@ def shop(request):
 @business_owned
 @user_group(allowed_roles=['customer'])
 def sell(request):
+    user = User.objects.get(username=request.user)
     if request.method == 'POST':
         business_name = request.POST.get("business_name")
         business_mail = request.POST.get("business_mail")
@@ -192,6 +193,12 @@ def sell(request):
 {account_name}
 {account_number}       
         """)
+
+        # Changing user's group from customer to seller
+        user_group = User.groups.through.objects.get(user=user)
+        print(user_group)
+        # user_group.group = Group.objects.get(name='seller')
+        # user_group.save()
     context = {
         "categories": CATEGORIES
     }
