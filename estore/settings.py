@@ -72,6 +72,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'estore.context_processors.global_variable'
             ],
+            'libraries': {
+                'customfilters': 'estore.template_filters.customfilters',
+            }
         },
     },
 ]

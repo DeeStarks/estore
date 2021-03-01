@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load customfilters %}
+
 {% block content %}
 <style>
     #rate_product{
@@ -143,7 +145,7 @@
                                 <div class="reviews-submitted">
                                     {% for review in product.productreview_set.all %}
 
-                                    <div class="reviewer">{{ review.reviewer_name }} - <span>{{ review.date_published|date:"D d M Y" }}</span></div>
+                                    <div class="reviewer border-top pt-2">{{ review.reviewer_name }} - <span>{{ review.date_published|date:"D d M Y" }}</span></div>
                                     
                                     {% if review.review_rating == review_ranges.zero %}
                                     <i class="far fa-star"></i>
@@ -183,7 +185,7 @@
                                     <i class="fas fa-star"></i>
                                     {% endif %}
 
-                                    <p>{{ review.review_text }}</p>
+                                    <p>{{ review.review_text|markdown }}</p>
 
                                     {% endfor %}
                                 </div>

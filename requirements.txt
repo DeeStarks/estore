@@ -7,6 +7,7 @@ django-phonenumber-field==5.0.0
 djangorestframework==3.12.2
 idna==2.10
 install==1.3.4
+Markdown==3.3.4
 phonenumbers==8.12.18
 Pillow==8.1.0
 pypaystack==1.24
