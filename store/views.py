@@ -108,12 +108,12 @@ def products(request):
     for product in Product.objects.all():
         if product.price > highest_price:
             highest_price = product.price
-    price_ranges = [[0, 1000]]
-    previous_range = 1000
-    for i in range(int(highest_price+1)):
-        if i % 1000 == 0 and i not in [0, 1000]:
+    price_ranges = [[0, 10000]]
+    previous_range = 10000
+    for i in range(int(highest_price+10000)):
+        if i % 10000 == 0 and i not in [0, 10000]:
             price_ranges.append([previous_range, i])
-            previous_range += 1000
+            previous_range += 10000
 
     return render(request, 'product-list.html', {
         'products': products,

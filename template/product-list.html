@@ -82,7 +82,7 @@
                     <div class="col-md-4">
                         <div class="product-item">
                             <div class="product-title">
-                                <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name }}</a>
+                                <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name|truncatechars:30 }}</a>
                                 <div class="ratting">
                                     {% if product.rating == review_ranges.zero %}
                                     <i class="far fa-star"></i>

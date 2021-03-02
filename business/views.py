@@ -63,7 +63,6 @@ def add_product(request):
             description=description,
             original_price=int(price),
             discount=int(discount),
-            rating=0,
             price=int(price)-int(discount),
             category=business_profile.category,
             featured=featured,
