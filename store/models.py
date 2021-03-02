@@ -12,7 +12,7 @@ CATEGORIES = (
 class Product(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=100, blank=True, null=True)
-    description = models.CharField(max_length=1000, blank=True, null=True)
+    description = models.TextField(max_length=100000, blank=True, null=True)
     original_price = models.IntegerField(null=True, blank=True)
     discount = models.IntegerField(null=True, blank=True)
     price = models.IntegerField(null=True, blank=True)
@@ -74,7 +74,7 @@ class ProductReview(models.Model):
 SUBSCRIPTION = (
     ('DAILY', 'One(1) Day - ₦1,000'),
     ('MONTHLY', 'One(1) Month - ₦25,000'),
-    ('YEARLY', 'One(1) Year - ₦1,000'),
+    ('YEARLY', 'One(1) Year - ₦300,000'),
 )
 
 class ProductAdvert(models.Model):
@@ -84,6 +84,7 @@ class ProductAdvert(models.Model):
     advert_title = models.CharField(max_length=50, blank=True, null=True)
     advert_description = models.CharField(max_length=200, blank=True, null=True)
     sub_duration = models.CharField(max_length=100, choices=SUBSCRIPTION, default='DAILY')
+    pub_date = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.product.product_name

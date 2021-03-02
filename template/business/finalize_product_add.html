@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+        
+<style>
+    
+</style>
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item active">Product List</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<div class="container">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row" style="background-color: white; margin: 20px 0; padding: 20px 20px 50px 20px; position: relative;">
+            <div class="col-12">
+                <div style="text-transform: uppercase;;font-weight: bold; color: #0000009f;">Select default image below:</div>
+                {% for image in images %}
+                <div style="float: left; margin: 10px;">
+                    <input style="display: none;" type="radio" name="image" id="image{{ image.id }}" value="{{ image.id }}" required>
+                    <div class="content" id="content{{ image.id }}" onclick="setDefault('{{ image.id }}')" style="width: 150px; height: 150px; background-image: url('{{ image.image.url }}'); background-position: center center; background-repeat: no-repeat; background-size: cover; cursor: pointer;">
+                        
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if product_is_featured %}
+            <hr>
+            <div class="col-12 border-top pt-3 mt-3">
+                <div style="font-weight: bold; color: #0000009f; margin-bottom: 20px; text-transform: uppercase;">Let's advertise your product for you:</div>
+                <div style="display: flex; justify-content: center;">
+                    <div style="width: 80%; max-height: 300px;">
+                        <div style="max-height: 280px; width: 100%; display: flex; align-items: center; overflow:hidden;border: 1px solid gray;" id="div0">
+                            <img src="" alt="" id="output0" style="width: 100%; height: auto;">
+                        </div>
+                        <br>
+                        <div style="height: 40px; width: 100%;">
+                            <input type="file" src="" alt="" id="input0" style="display: none;" accept="image/*" onchange="loadFile(event, 0)" name="banner">
+                            <label for="input0" style="width: 100%; color: #ffffff; background-color: #FF6F61; line-height: 40px; text-align: center; cursor: pointer; font-size: 18px; font-weight: 600;">Click to upload a banner</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="col-12 mt-5">
+                <button class="btn w-100 py-3" type="submit">SUBMIT</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function setDefault(id){
+        let i = 0
+        let content = document.getElementsByClassName('content')
+        while(i != content.length){
+            content[i].innerHTML = '';
+            i++;
+        }
+        document.getElementById(`image${id}`).click();
+        document.getElementById(`content${id}`).innerHTML = `
+            <i class="fas fa-check-circle" style="background-color: #0000006e; color: white; font-size: 30px; text-align: center; width: 150px; line-height: 150px;"></i>
+        `
+    }
+    
+    // Preview Image before upload
+    var loadFile = function(event, element) {
+        var output = document.getElementById(`output${element}`);
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    };
+</script>
+{% endblock %}

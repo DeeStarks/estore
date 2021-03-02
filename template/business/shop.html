@@ -1,8 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+        
 <style>
-    
+    .disabled.next a{
+        color: #00000065 !important;
+        border-color: #00000065 !important;
+        border-radius: 0 4px 4px 0;
+        background-color: transparent;
+    }
+    .disabled.prev a{
+        color: #00000065 !important;
+        border-color: #00000065 !important;
+        border-radius: 4px 0 0 4px;
+        background-color: transparent;
+    }
 </style>
 <!-- Breadcrumb Start -->
 <div class="breadcrumb-wrap">
@@ -10,12 +22,141 @@
         <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}">Products</a></li>
-            <li class="breadcrumb-item active">Your Shop</li>
+            <li class="breadcrumb-item active">Product List</li>
         </ul>
     </div>
 </div>
 <!-- Breadcrumb End -->
-<div class="container">
-    
+
+<!-- Product Add -->
+<div style="display: flex; justify-content: center; margin: 20px 0;">
+    <div>
+        <a id="addProduct" href="{% url 'business:add_product' %}" style="width: 300px; position: relative; transition: 200ms;">
+            <div id="addText" style="width: 0; height: 100px; display: flex; align-items: center; overflow: hidden; border: 1px solid #0000002a; background-color: #fff; float: left; border-radius: 10px 0 0 10px; transition: 200ms;">
+                <div style="text-align: center; width: 100%; color: #000000ad !important; font-size: 20px; font-weight: bold;">ADD PRODUCT</div>
+            </div>
+            <div id="addIcon" style="width: 100px; height: 100px; display: flex; align-items: center; float: left; background-color: #FF6F61; border-radius: 0; transition: 200ms;">
+                <div style="text-align: center; width: 100%; color: #fff !important;"><i class="fas fa-plus" style="font-size: 30px;"></i></div>
+            </div>
+        </a>
+    </div>
 </div>
+<!-- Product Add End-->
+
+<!-- Product List Start -->
+<div class="product-view">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    {% if products %}
+                    {% for product in products %}
+                    <div class="col-md-4">
+                        <div class="product-item">
+                            <div class="product-title">
+                                <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name }}</a>
+                                <div class="ratting">
+                                    {% if product.rating == review_ranges.zero %}
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    {% elif product.rating in review_ranges.one %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    {% elif product.rating in review_ranges.two %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    {% elif product.rating in review_ranges.three %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    {% elif product.rating in review_ranges.four %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    {% elif product.rating in review_ranges.five %}
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="product-image">
+                                <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">
+                                    {% for image in product.productimage_set.all %}
+                                    {% if image.default %}
+                                    <img src="{{ image.image.url }}" alt="Product Image">
+                                    {% endif %}
+                                    {% endfor %}
+                                </a>
+                                <div class="product-action">
+                                    <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}"><i class="fas fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-price">
+                                <h3><span>₦ </span>{{ product.price }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <h2 class="text-center font-italic w-100 my-5">You don't have any product</h2>
+                    {% endif %}
+                </div>
+                
+                <!-- Pagination Start -->
+                <div class="col-md-12">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if products.has_previous %}
+                            <li class="page-item"><a href="?page={{ products.previous_page_number }}" class="page-link" tabindex="-1">Previous</a></li>
+                            {% else %}
+                            <li class="disabled prev"><a class="page-link" tabindex="-1">Previous</a></li>
+                            {% endif %}
+                            {% for i in products.paginator.page_range %}
+                            {% if products.number == i %}
+                                <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }</a></li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if products.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+                            {% else %}
+                            <li class="disabled next"><a class="page-link">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Pagination Ends -->
+            </div>           
+        </div>
+    </div>
+</div>
+<!-- Product List End -->  
+<script>
+    document.getElementById("addProduct").onmouseover = function(){
+        document.getElementById('addText').style.width = '200px';
+        document.getElementById('addIcon').style.borderRadius = '0 10px 10px 0';
+    }
+    document.getElementById("addProduct").onmouseout = function(){
+        document.getElementById('addText').style.width = '0';
+        document.getElementById('addIcon').style.borderRadius = '0';
+    }
+</script>
+
 {% endblock %}

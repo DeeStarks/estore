@@ -38,21 +38,23 @@
             <div class="col-md-6">
                 <div class="header-slider normal-slider">
                     {% for advert in adverts %}
-                    <div class="header-slider-item">
-                        <img src="{{ advert.banner.url }}" alt="Slider Image" />
+                    <div class="header-slider-item" style="overflow: hidden; display: flex; align-items: center; background-image: url('{{ advert.banner.url }}'); background-position: center center; background-repeat: no-repeat; background-size: cover; height: 400px;">
+                        <!-- <img src="{{ advert.banner.url }}" alt="Slider Image" style="width: 100%; height: auto;"/> -->
                         <div class="header-slider-caption">
-                            <p>{{ advert.title|title }}</p>
+                            <p>{{ advert.advert_title|title|truncatechars:30 }}</p>
                             <a class="btn" href="{% url 'store:product_detail' advert.product.id advert.product.product_name.split|join:'_' %}"><i class="fa fa-shopping-cart"></i>Shop Now</a>
                         </div>
                     </div>
                     {% endfor %}
+                    {% if request.user.groups.all.0.name == 'customer' %}
                     <div class="header-slider-item">
                         <img src="{% static 'img/slider-2.jpg' %}" alt="Slider Image" />
                         <div class="header-slider-caption">
                             <p>Want to sell on EStore?</p>
-                            <a class="btn" href=""><i class="fa fa-plus"></i>Become an EStore Seller</a>
+                            <a class="btn" href="{% url 'transaction:sell' %}"><i class="fa fa-plus"></i>Become an EStore Seller</a>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-md-3">
@@ -199,12 +201,12 @@
             <h1>Featured Product</h1>
         </div>
         {% if featured %}
-        {% for product in featured %}
         <div class="row align-items-center product-slider {% if featured|length > 4 %}product-slider-4{% endif %}">
+            {% for product in featured %}
             <div class="col-lg-3">
                 <div class="product-item">
                     <div class="product-title">
-                        <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name }}</a>
+                        <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name|truncatechars:30  }}</a>
                         <div class="ratting">
                             {% if product.rating == review_ranges.zero %}
                             <i class="far fa-star"></i>
@@ -268,8 +270,8 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
         {% else %}
         <h2 class="text-center font-italic">No featured products</h2>
         {% endif %}
@@ -302,12 +304,12 @@
             <h1>Recent Product</h1>
         </div>
         {% if recent %}
-        {% for product in recent %}
         <div class="row align-items-center product-slider {% if featured|length > 4 %}product-slider-4{% endif %}">
+            {% for product in recent %}
             <div class="col-lg-3">
                 <div class="product-item">
                     <div class="product-title">
-                        <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name }}</a>
+                        <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name|truncatechars:30 }}</a>
                         <div class="ratting">
                             {% if product.rating == review_ranges.zero %}
                             <i class="far fa-star"></i>
@@ -371,8 +373,8 @@
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
         {% else %}
         <h2 class="text-center font-italic">No recent products</h2>
         {% endif %}

@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .card {
+        max-width: 1000px;
+        margin: 2vh
+    }
+
+    .card-top {
+        padding: 0.7rem 5rem
+    }
+
+    .card-top a {
+        float: left;
+        margin-top: 0.7rem
+    }
+
+    #logo {
+        font-family: 'Dancing Script';
+        font-weight: bold;
+        font-size: 1.6rem
+    }
+
+    .card-body {
+        padding: 0 5rem 5rem 5rem;
+    }
+
+    @media(max-width:768px) {
+        .card-body {
+            padding: 0 1rem 1rem 1rem;
+        }
+
+        .card-top {
+            padding: 0.7rem 1rem
+        }
+    }
+
+    .row {
+        margin: 0
+    }
+
+    .upper {
+        padding: 1rem 0;
+        justify-content: space-evenly
+    }
+
+    #three {
+        border-radius: 1rem;
+        width: 22px;
+        height: 22px;
+        margin-right: 3px;
+        border: 1px solid blue;
+        text-align: center;
+        display: inline-block
+    }
+
+    #payment {
+        margin: 0;
+        color: blue
+    }
+
+    .icons {
+        margin-left: auto
+    }
+
+    form span {
+        color: rgb(179, 179, 179)
+    }
+
+    .cover form {
+        padding: 2vh 0
+    }
+
+    .cover input {
+        border: 1px solid rgba(0, 0, 0, 0.137);
+        padding: 1vh;
+        margin-bottom: 4vh;
+        outline: none;
+        width: 100%;
+        background-color: rgb(247, 247, 247)
+    }
+
+    .cover input:focus::-webkit-input-placeholder {
+        color: transparent
+    }
+
+    label{
+        cursor: pointer;
+        font-weight: 700;
+    }
+
+    .header {
+        font-size: 1.5rem
+    }
+
+    .left {
+        background-color: #ffffff;
+        padding: 2vh
+    }
+
+    .left img {
+        width: 2rem
+    }
+
+    .left .col-4 {
+        padding-left: 0
+    }
+
+    .right .item {
+        padding: 0.3rem 0
+    }
+
+    .right {
+        background-color: #ffffff;
+        padding: 2vh
+    }
+
+    .col-8 {
+        padding: 0 1vh
+    }
+
+    .lower {
+        line-height: 2
+    }
+</style>
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container-fluid">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'store:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item active">Add Product</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<div class="cover py-3 d-flex justify-content-center">
+    <div class="card">
+        <div class="card-body pt-5">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="left border">
+                        <div class="row"> 
+                            <span class="header" style="font-weight: bold;">ADD NEW PRODUCT</span>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %} 
+                            <span>Product Name:</span> 
+                            <input placeholder="Iphone 12" name="product_name" type="text" required>
+
+                            <span>Description:</span>
+                            <textarea name="description" id="" cols="20" rows="5" placeholder="Product description" class="form-control py-2 mt-2" required></textarea>
+
+                            <span>Price (₦):</span> 
+                            <input placeholder="e.g 20000" name="price" type="number" required>
+
+                            <span>Discount (₦):</span> 
+                            <input placeholder="e.g 100" name="discount" type="number" required>
+
+                            <span>Category:</span> 
+                            <input name="" type="text" value="{{ seller_category }}" readonly>
+
+                            <span>Shipped from abroad:</span> 
+                            <div class="row pt-2">
+                                <div class="col-12">
+                                    <label for="shipped_yes" style="width: 50px; float: left; line-height: 20px; padding-top: 5px">Yes</label>
+                                    <div style="width: 100px;">
+                                        <input type="radio" value="True" name="shipped" id="shipped_yes" style="width: 16px !important; padding: 0 !important; margin: 0 !important;" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label for="shipped_no" style="width: 50px; float: left; line-height: 20px; padding-top: 5px">No</label>
+                                    <div style="width: 100px;">
+                                        <input type="radio" value="False" name="shipped" id="shipped_no" style="width: 16px !important; padding: 0 !important; margin: 0 !important;" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            {% if seller_category == 'Men & Women Clothes' or seller_category == 'Fashion & Beauty' %}
+                            <span>Cloth Sizes:</span> 
+                            <div class="row pt-2">
+                                <div class="col-12">
+                                    {% for size in sizes %}
+                                    <label for="box{{ size.0 }}" style="width: 50px; float: left; line-height: 20px; padding-top: 5px">{{ size.1 }}</label>
+                                    <div style="width: 100px;">
+                                        <input type="checkbox" value="{{ size.0 }}" name="sizes" id="box{{ size.0 }}" style="width: 16px !important; padding: 0 !important; margin: 0 !important; font-size: 10px;" class="form-control" required>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <br>
+                            {% endif %}
+
+                            <span>Product Specification:</span>
+                            <div id="specification">
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <span>Title:</span> 
+                                        <input placeholder="e.g. Color" name="spec_title"> 
+                                    </div>
+                                    <div class="col-6">
+                                        <span>Details:</span> 
+                                        <input placeholder="e.g. Silver" name="spec_detail"> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background-color: #00000083; border-radius: 0; padding: 10px; color: white; border: 0; outline: none; cursor: pointer; width: 200px; text-align: center;" id="add_spec">Add more specification</div>
+                            
+                            <br>
+                            <span>Product Images: (max of 5 images with each image not more than 5mb)</span>
+                            <div class="row mt-2" id="images">
+                                <div onclick="addImage()" style="width: 150px; height: 150px; background-color: #00000038; display: flex; align-items: center; justify-content: center; cursor: pointer; margin: 5px;">
+                                    <i class="fas fa-plus" style="font-size: 30px; color: white; background-color: #0000007c; text-align: center; border-radius: 50%; padding: 30px;"></i>
+                                </div>
+                                <div style="width: 150px; margin: 5px;">
+                                    <div style="width: 100%; height: 150px; border: 1px solid gray;">
+                                        <div style="height: 120px; width: 100%; display: flex; align-items: center; overflow:hidden;" id="div0">
+                                            <img src="" alt="" id="output0" style="width: 100%; height: auto;">
+                                        </div>
+                                        <div style="height: 30px; width: 100%;">
+                                            <input type="file" src="" alt="" id="input0" style="display: none;" accept="image/*" onchange="loadFile(event, 0)" name="images" required>
+                                            <label for="input0" style="width: 100%; color: #ffffff; background-color: #0000007c; line-height: 30px; text-align: center; cursor: pointer;">Upload</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <br>
+                            <span>Feature this product: (optional)</span>
+                            <div class="row pt-2">
+                                <div class="col-12 row">
+                                    <input type="hidden" id="subType" name="sub_type" value="">
+                                    <div class="col-12 row" id="subCheck">
+                                        {% for subscription in subscriptions %}
+                                        <div class="col-3">
+                                            <div style="background-color: #000000a8; color: #ffffff; outline: none; border: 0; padding: 10px; width: 100%; text-align: center; cursor: pointer" class="subPlan" value="{{ subscription.0 }}" onclick='feature("{{ subscription.0 }}", "{{ subscription.2 }}")'>{{ subscription.1 }}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br><br>
+                            <button type="submit" style="width: 100%; text-align: center; border-radius: 0; padding: 10px;" class="btn">Add Product</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal popup after payment successful -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="success" style="display: none;">Success</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header"  style="background-color: #FF6F61 !important; color: #fff;">
+                <h5 class="modal-title" id="exampleModalLabel">Success!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 30px; color: #fff;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>Your payment was successful! Your product has been featured.</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-warning" style="border-color: #FF6F61 !important;" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal popup end -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script> 
+}
+<script>
+    // Add specification
+    $('#add_spec').click(function() {
+        $("#specification").append(`
+            <div class="row mt-2">
+                <div class="col-6">
+                    <span>Title:</span> 
+                    <input placeholder="e.g. Color" name="spec_title"> 
+                </div>
+                <div class="col-6">
+                    <span>Details:</span> 
+                    <input placeholder="e.g. Silver" name="spec_detail"> 
+                </div>
+            </div>
+        `);
+    })
+
+    // Add image content
+    let newId = 1
+
+    function addImage() {
+        if(newId !== 5){
+            $("#images").append(`
+                <div style="width: 150px; margin: 5px;">
+                    <div style="width: 100%; height: 150px; border: 1px solid gray;">
+                        <div style="height: 120px; width: 100%; display: flex; align-items: center; overflow:hidden" id="div${newId}">
+                            <img src="" alt="" id="output${newId}" style="width: 100%; height: auto;">
+                        </div>
+                        <div style="height: 30px; width: 100%;">
+                            <input type="file" src="" alt="" id="input${newId}" style="display: none;" accept="image/*" onchange="loadFile(event, ${newId})" name="images">
+                            <label for="input${newId}" style="width: 100%; color: #ffffff; background-color: #0000007c; line-height: 30px; text-align: center; cursor:pointer">Upload</label>
+                        </div>
+                    </div>
+                </div>
+            `)
+            newId += 1
+        }else{
+            alert("Maximum image upload of 5 reached!")
+        }
+    }
+
+    // Preview Image before upload
+    var loadFile = function(event, element) {
+        var output = document.getElementById(`output${element}`);
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    };
+
+    // Featuring product with Paystack implementation
+    function feature(subPrice, subDuration){
+        let price = parseInt(subPrice) * 100
+        let handler = PaystackPop.setup({
+            key: '{{ paystack_pubkey }}',
+            email: "{{ request.user.email }}",
+            amount: price.toString(),
+            ref: 'feature_refno_'+Math.floor((Math.random() * 1000000000) + 1),
+            onClose: function(){
+                alert('Window closed.');
+            },
+            callback: function(response){
+                let refNo = response.reference
+
+                fetch(`http://127.0.0.1:8000/verify/${refNo}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data)
+                    document.getElementById("success").click();
+                    document.getElementById("subType").value = subDuration;
+                    document.getElementById("subCheck").innerHTML = `
+                        <div style="font-weight: bold; font-size: 15px;">Featured <i class="far fa-check-circle"></i></div>
+                    `;
+                });
+            }
+        });
+        handler.openIframe();
+    }
+</script>
+{% endblock %}

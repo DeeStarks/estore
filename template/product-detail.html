@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load customfilters %}
+{% load markdown_deux_tags %}
 
 {% block content %}
 <style>
@@ -134,7 +134,7 @@
 
                         <div class="tab-content">
                             <div id="description" class="container tab-pane active">
-                                <p>{{ product.description }}</p>
+                                <p>{{ product.description|markdown }}</p>
                             </div>
                             <div id="specification" class="container tab-pane fade">
                                 {% for spec in product.productspecification_set.all %}
