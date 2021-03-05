@@ -681,6 +681,7 @@ h2 {
 /**********************************/
 .product-item {
     position: relative;
+    max-height: 500px;
 }
 
 .product-item .product-title {
@@ -730,6 +731,7 @@ h2 {
 .product-item .product-image {
     position: relative;
     overflow: hidden;
+    height: 250px !important;
 }
 
 .product-item .product-image a {
@@ -741,10 +743,9 @@ h2 {
 .product-item .product-image img {
     width: 100%; 
     transition: all .3s;
-}
-
-.product-item:hover .product-image img {
-    transform: scale(1.2);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) !important;
 }
 
 .product-item .product-image .product-action {

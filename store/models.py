@@ -12,12 +12,12 @@ CATEGORIES = (
 class Product(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(max_length=100000, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     original_price = models.IntegerField(null=True, blank=True)
     discount = models.IntegerField(null=True, blank=True)
     price = models.IntegerField(null=True, blank=True)
     category = models.CharField(max_length=100, choices=CATEGORIES, null=True)
-    rating = models.IntegerField(default=100, blank=True)
+    rating = models.IntegerField(default=0, blank=True)
     sold = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
     featured = models.BooleanField(default=False)
@@ -63,7 +63,7 @@ class ProductReview(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     reviewer_name = models.CharField(max_length=150, blank=True, null=True)
     reviewer_email = models.EmailField(max_length=150, blank=True, null=True)
-    review_text = models.CharField(max_length=1000, blank=True, null=True)
+    review_text = models.TextField(blank=True, null=True)
     review_rating = models.IntegerField(null=True, blank=True)
     date_published = models.DateTimeField(auto_now_add=True)
     

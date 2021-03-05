@@ -31,10 +31,17 @@ def products(request):
     return Response(serializer.data)
     
 @login_required(login_url='account:signin')
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def product(request, pk):
     product = Product.objects.get(id=pk)
     serializer = ProductsSerializer(product)
+    if request.method == 'PUT':
+        serializer = ProductsSerializer(instance=product,
+        data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            print(serializer.errors)
     return Response(serializer.data)
 
 @login_required(login_url='account:signin')

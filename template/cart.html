@@ -223,7 +223,26 @@
                             "total_price": parseInt(document.getElementById("price{{ product.id }}").innerHTML)
                         })
                     })
+
+                    // Incrementing product sale count
+                    fetch('http://127.0.0.1:8000/api/product/{{ product.product.id }}')
+                    .then((res) => res.json())
+                    .then((data) => {
+                        fetch('http://127.0.0.1:8000/api/product/{{ product.product.id }}', {
+                            method: 'PUT',
+                            headers: {
+                                "Content-type": "application/json",
+                                "X-CSRFToken": csrftoken
+                            },
+                            body: JSON.stringify({
+                                "seller": data.seller,
+                                "sold": data.sold + 1
+                            })
+                        })
+                        .then((res) => console.log(res.json()))
+                    })
                     "{% endfor %}"
+
                     document.getElementById("success").click();
                     document.getElementById("cartDepo").innerHTML = `
                         <div style="text-align: center; color: gray; width: 100%; font-size: 25px; font-weight: bold; font-style: italic;">You have no product in your cart</div>

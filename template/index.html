@@ -1,6 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+    .product-item{
+        max-height: 500px;
+    }
+    .product-item .product-image{
+        height: 250px !important;
+        overflow: hidden;
+        position: relative;
+    }
+    .product-item .product-image img{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) !important;
+    }
+</style>
 <!-- Main Slider Start -->
 <div class="header">
     <div class="container-fluid">
@@ -198,7 +213,7 @@
 <div class="featured-product product">
     <div class="container-fluid">
         <div class="section-header">
-            <h1>Featured Product</h1>
+            <h1>Featured Products</h1>
         </div>
         {% if featured %}
         <div class="row align-items-center product-slider {% if featured|length > 4 %}product-slider-4{% endif %}">
@@ -301,7 +316,7 @@
 <div class="recent-product product">
     <div class="container-fluid">
         <div class="section-header">
-            <h1>Recent Product</h1>
+            <h1>Recent Products</h1>
         </div>
         {% if recent %}
         <div class="row align-items-center product-slider {% if featured|length > 4 %}product-slider-4{% endif %}">

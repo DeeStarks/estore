@@ -12,7 +12,7 @@ def authenticated_user(view_func):
 # Redirects business owners who are already registered
 def business_owned(view_func):
     def wrapper(request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.groups.all()[0].name == 'seller':
+        if request.user.is_authenticated and (request.user.is_superuser or request.user.groups.all()[0].name == 'seller'):
             return redirect('store:index')
         return view_func(request, *args, **kwargs)
     return wrapper

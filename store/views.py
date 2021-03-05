@@ -150,10 +150,16 @@ def product_detail(request, product_id, title):
         if rate:
             percentage_rate = int((int(rate)/5)*100)
             
-        total_rate = int(((percentage_rate+product.rating)/200)*100)
+        # Product rating
+        total_rate = 0
+        if product.rating == 0 and ProductReview.objects.filter(product=product).count == 0:
+            total_rate = int(((percentage_rate+100)/200)*100)
+        else:
+            total_rate = int(((percentage_rate+product.rating)/200)*100)
         product.rating = total_rate
         product.save()
 
+        # Adding user's review to the ProductReview table in the database
         ProductReview.objects.create(
             product=product,
             seller=product.seller,
