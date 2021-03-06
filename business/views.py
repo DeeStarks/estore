@@ -29,7 +29,7 @@ def add_product(request):
     subscriptions = []
     for sub in SUBSCRIPTION:
         subscriptions.append([sub[1].split("₦")[1].replace(",", ""), sub[1], sub[0]])
-        
+
     if request.method == 'POST':
         product_name = request.POST.get("product_name")
         description = request.POST.get("description")
@@ -37,7 +37,7 @@ def add_product(request):
         discount = request.POST.get("discount")
         spec_title = request.POST.getlist("spec_title")
         spec_detail = request.POST.getlist("spec_detail")
-        sub_type = request.POST.get("sub_type")
+        sub_type = "nofeature"
         shipped = False
         featured = False
         specification = []
@@ -45,7 +45,8 @@ def add_product(request):
         images = []
         if request.POST.get("shipped") == 'True':
             shipped = True
-        if sub_type:
+        if request.POST.get("sub_type"):
+            sub_type = request.POST.get("sub_type")
             featured = True
         for index in range(len(spec_title)):
             specification.append([spec_title[index], spec_detail[index]])
@@ -55,7 +56,7 @@ def add_product(request):
 
         if request.FILES:
             images = request.FILES.getlist("images")
-        
+
         # Creating the product
         product = Product.objects.create(
             seller=request.user,
@@ -83,7 +84,7 @@ def add_product(request):
                 title=spec[0],
                 detail=spec[1]
             )
-        
+
         # Adding its images
         for index in range(len(images)):
             if index == 0:
@@ -128,14 +129,15 @@ def finalize_product_addition(request, id, sub_type):
 
             if request.FILES:
                 banner = request.FILES.get("banner")
-                ProductAdvert.objects.create(
+                advert = ProductAdvert.objects.create(
                     seller=request.user,
                     product=product,
                     advert_title=product.product_name,
                     advert_description=product.description,
-                    sub_duration=sub_type.upper(),
                     banner=banner
                 )
+                if sub_type != "nofeature":
+                    advert.sub_duration=sub_type.upper()
             return redirect('store:index')
 
         context = {

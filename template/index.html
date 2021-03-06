@@ -319,7 +319,7 @@
             <h1>Recent Products</h1>
         </div>
         {% if recent %}
-        <div class="row align-items-center product-slider {% if featured|length > 4 %}product-slider-4{% endif %}">
+        <div class="row align-items-center product-slider {% if recent|length > 4 %}product-slider-4{% endif %}">
             {% for product in recent %}
             <div class="col-lg-3">
                 <div class="product-item">

@@ -103,10 +103,10 @@
                                         {% for size in product.clothsize_set.all %}
                                         <button type="button" class="btn">{{ size.get_size_display }}</button>
                                         {% endfor %}
-                                    </div> 
+                                    </div>
                                 </div>
                                 {% endif %}
-                                <div class="action">                  
+                                <div class="action">
                                     {% if product.id in cart_product_ids %}
                                     <a class="btn" href="{% url 'transaction:cart' %}"><i class="fa fa-shopping-cart"></i>Go to cart</a>
                                     {% else %}
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row product-detail-bottom">
                     <div class="col-lg-12">
                         <ul class="nav nav-pills nav-justified">
@@ -146,7 +146,7 @@
                                     {% for review in product.productreview_set.all %}
 
                                     <div class="reviewer border-top pt-2">{{ review.reviewer_name }} - <span>{{ review.date_published|date:"D d M Y" }}</span></div>
-                                    
+
                                     {% if review.review_rating == review_ranges.zero %}
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
@@ -222,7 +222,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="product">
                     <div class="section-header">
                         <h1>Related Products</h1>
@@ -230,8 +230,8 @@
 
                     <div class="row align-items-center product-slider {% if related_products|length > 3 %}product-slider-3{% endif %}">
                         {% if related_products|length != 0 %}
-                        <div class="col-lg-4">
                         {% for product in related_products %}
+                        <div class="col-lg-4">
                             <div class="product-item">
                                 <div class="product-title">
                                     <a href="{% url 'store:product_detail' product.id product.product_name.split|join:'_' %}">{{ product.product_name|truncatechars:30 }}</a>
@@ -297,15 +297,15 @@
                                     {% endif %}
                                 </div>
                             </div>
-                        {% endfor %}
                         </div>
+                        {% endfor %}
                         {% else %}
                         <h2 class="text-center font-italic w-100">No related products</h2>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            
+
             <!-- Side Bar Start -->
             <div class="col-lg-4 sidebar">
                 <div class="sidebar-widget category">
@@ -330,7 +330,7 @@
                         </ul>
                     </nav>
                 </div>
-                
+
                 {% if other_products %}
                 <div class="sidebar-widget widget-slider">
                     <div class="sidebar-slider normal-slider">
@@ -399,10 +399,6 @@
                                 <a href="{% url 'transaction:add_to_cart' product.id %}" class="btn" style="cursor: pointer;"><i class="fas fa-shopping-cart"></i></a>
                                 {% endif %}
                             </div>
-                            <div class="product-price">
-                                <h3><span>₦ </span>{{ product.price }}</h3>
-                                <a class="btn" href=""><i class="fa fa-shopping-cart"></i></a>
-                            </div>
                         </div>
                         {% endfor %}
                     </div>
@@ -445,11 +441,11 @@
             productRate[i].className = 'far fa-star rate';
             i++;
         }
-     
+
         for(let j = 0; j <= productRate.length; j++){
             if(j != element){
                 productRate[j].className = 'fas fa-star rate'
-            }else{                    
+            }else{
                 productRate[j].className = 'fas fa-star rate'
                 document.getElementById('rate_value').value = document.querySelectorAll(".rate span")[j].innerHTML
                 break;
@@ -457,7 +453,7 @@
         }
         console.log(document.getElementById('rate_value').value)
     }
-    
+
     // Handling CSRF Token for django to accept POST request from Javascript
     function getCookie(name) {
         let cookieValue = null;
