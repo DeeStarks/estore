@@ -1,9 +1,5 @@
 # EStore Online Marketplace
 
-This is an Ecommerce web app using Python (Django).
-
-Feel free to make changes. And if you love the project, do ADD a STAR ⭐️.
-
 ## Features of this Project
 
 ### A. Seller
